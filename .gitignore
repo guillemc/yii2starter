@@ -1,3 +1,6 @@
+.env.php
+/config/*-local.php
+
 # phpstorm project files
 .idea
 
