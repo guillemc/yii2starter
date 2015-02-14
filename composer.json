@@ -30,7 +30,8 @@
         "yii\\composer\\Installer::postCreateProject": {
             "setPermission": [
                 {
-                    "yii": "0755"
+                    "yii": "0755",
+										"tests/codeception/bin/yii": "0755"
                 }
             ]
         },

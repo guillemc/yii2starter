@@ -13,7 +13,7 @@ return [
     ],
     'components' => [
         'db' => [
-            'dsn' => 'mysql:host=localhost;dbname=yii2_basic_tests',
+            'dsn' => 'mysql:host='.DB_HOST.';dbname='.DB_NAME_TEST,
         ],
         'mailer' => [
             'useFileTransport' => true,
