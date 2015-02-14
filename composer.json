@@ -32,7 +32,7 @@
                 {
                     "yii": "0755"
                 }
-            ],
+            ]
         },
         "asset-installer-paths": {
             "npm-asset-library": "vendor/npm",
