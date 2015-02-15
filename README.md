@@ -5,12 +5,13 @@ Yii 2 Starter Application Template is a skeleton Yii 2 application best for
 rapidly creating small to medium sized projects.
 
 It is built upon the official [Yii 2 Basic Application Template](https://github.com/yiisoft/yii2-app-basic)
-but provides two separate applications, for the frontend and the backend. Unlike in the 
-[Yii 2 Advanced Application Template](https://github.com/yiisoft/yii2-app-advanced), here the 
+but provides two separate applications, for the frontend and the backend. Unlike in the
+[Yii 2 Advanced Application Template](https://github.com/yiisoft/yii2-app-advanced), here the
 two apps share the same webroot, and are accessed using different entry scripts.
 
 The template contains basic backend functionality such as password reset and administrator management.
 
+The backend is built upon the [xenon admin theme](http://xenontheme.com/) (not included).
 
 DIRECTORY STRUCTURE
 -------------------
@@ -81,8 +82,8 @@ user `admin` with password `admin`.
 ### Application URLs
 
 If installed inside your webserver's document root, the frontend will be available at `http://localhost/myapp/web/`
-and the backend at `http://localhost/myapp/web/back.php`. In production it is recommended that you set a virtual 
-host for your application that points to the `web` directory, so that the access urls become `http://myapp.com/` 
+and the backend at `http://localhost/myapp/web/back.php`. In production it is recommended that you set a virtual
+host for your application that points to the `web` directory, so that the access urls become `http://myapp.com/`
 and `http://myapp.com/back.php`.
 
 

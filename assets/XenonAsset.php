@@ -22,10 +22,7 @@ class XenonAsset extends AssetBundle
         'bundles/xenon/css/fonts/linecons/css/linecons.css',
         'bundles/xenon/css/fonts/fontawesome/css/font-awesome.min.css',
         'bundles/xenon/css/bootstrap.css',
-        'bundles/xenon/css/xenon-core.css',
-        'bundles/xenon/css/xenon-forms.css',
-        'bundles/xenon/css/xenon-components.css',
-        'bundles/xenon/css/xenon-skins.css',
+        'bundles/xenon/css/xenon.css',
         'css/admin.css',
     ];
     public $js = [
