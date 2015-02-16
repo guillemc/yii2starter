@@ -33,6 +33,9 @@ class Generator extends \yii\gii\generators\crud\Generator
 {
     public $saveAndReturn;
 
+    public $tsColumns = ['created_at', 'updated_at', 'created', 'updated'];
+    public $nameColumns = ['name', 'title', 'username', 'firstname', 'lastname'];
+
     /**
      * @inheritdoc
      */
@@ -91,11 +94,27 @@ class Generator extends \yii\gii\generators\crud\Generator
 
     public function getGridColumnSpec($column)
     {
-
-        $nameColumns = ['name', 'title', 'username', 'firstname', 'lastname'];
-        if (in_array($column->name, $nameColumns)) {
+        if (in_array($column->name, $this->nameColumns)) {
             return <<<EOT
-['attribute' => '{$column->name}', 'format' => 'raw', 'value' => function (\$model) { return Html::a(\$model->{$column->name}, ['update', 'id' => \$model->id]); }],
+[
+                'attribute' => '{$column->name}',
+                'format' => 'raw',
+                'value' => function (\$model) {
+                    return Html::a(\$model->{$column->name}, ['update', 'id' => \$model->id]);
+                },
+            ],
+EOT;
+        }
+        if ($this->isBoolean($column)) {
+            return <<<EOT
+[
+                'attribute' => '{$column->name}',
+                'filter' => ['1' => Yii::t('admin', 'Yes'), '0' => Yii::t('admin', 'No')],
+                'value' => function (\$model) {
+                    return \$model->{$column->name} ? Yii::t('admin', 'Yes') : Yii::t('admin', 'No');
+                },
+                'contentOptions' => ['class' => 'text-center'],
+            ],
 EOT;
         }
 
@@ -106,11 +125,36 @@ EOT;
     public function getDetailColumnSpec($column)
     {
 
-        $tsColumns = ['created_at', 'updated_at', 'created', 'updated'];
-        if (in_array($column->name, $tsColumns)) {
+        if (in_array($column->name, $this->tsColumns)) {
             return "'{$column->name}:datetime',";
         }
+        if ($this->isBoolean($column)) {
+            return "'{$column->name}:boolean',";
+        }
+
 
         return false;
+    }
+
+
+    public function isBoolean($column)
+    {
+        return $column->phpType == 'boolean' || ($column->phpType == 'integer' && $column->size == 1);
+    }
+
+
+    public function generateActiveField($attribute)
+    {
+        $tableSchema = $this->getTableSchema();
+        if ($tableSchema === false || !isset($tableSchema->columns[$attribute])) {
+            return parent::generateActiveField($attribute);
+        }
+        $column = $tableSchema->columns[$attribute];
+
+        if ($this->isBoolean($column)) {
+            return "\$form->field(\$model, '$attribute')->checkbox()";
+        }
+        
+        return parent::generateActiveField($attribute);
     }
 }

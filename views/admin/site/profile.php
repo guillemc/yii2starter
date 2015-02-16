@@ -16,7 +16,7 @@ $this->params['page_subtitle'] = Yii::t('admin', 'Change your connection details
     <?php if (Yii::$app->session->getFlash('profile.success')): ?>
     <div class="alert alert-success">
     <button data-dismiss="alert" class="close" type="button">×</button>
-    <?= Yii::t('admin', 'Data succcessfully saved.') ?>
+    <?= Yii::t('admin', 'Data successfully saved.') ?>
     </div>
     <?php elseif ($model->hasErrors()): ?>
     <div class="alert alert-danger">

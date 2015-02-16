@@ -17,8 +17,8 @@
  * NOTE: this file must be saved in UTF-8 encoding.
  */
 return [
-    'Create and return' => 'Crear y volver',
-    'Save and return' => 'Guardar y volver',
+    'No' => 'No',
+    'Yes' => 'Sí',
     'Add new' => 'Añadir nuevo',
     'Administrators' => 'Administradores',
     'An email has been sent to {email} with further instructions.' => 'Se ha enviado un email a {email} con instrucciones.',
@@ -27,7 +27,8 @@ return [
     'Change your connection details, such as username and password.' => 'Ajuste sus parámetros de conexión, como nombre de usuario y contraseña.',
     'Continue' => 'Continuar',
     'Create' => 'Crear',
-    'Data succcessfully saved.' => 'Datos guardados correctamente.',
+    'Create and return' => 'Crear y volver',
+    'Data successfully saved.' => 'Datos guardados correctamente.',
     'Debug info' => 'Información técnica',
     'Delete' => 'Eliminar',
     'Edit' => 'Editar',
@@ -61,6 +62,7 @@ return [
     'Repeat password' => 'Repetir contraseña',
     'Request password reset' => 'Solicitar restablecimento de contraseña',
     'Save' => 'Guardar',
+    'Save and return' => 'Guardar y volver',
     'Update' => 'Actualizar',
     'Used for password reset.' => 'Se usa para restablecer contraseña.',
     'Username' => 'Nombre de usuario',
