@@ -2,11 +2,9 @@
 
 $params = require(__DIR__ . '/params.php');
 
-$appId = 'app-backend';
-
 $config = [
     'name' => 'MyApp',
-    'id' => $appId,
+    'id' => 'back-'.APP_ID,
     'language' => 'en',
     'timeZone' => 'Europe/Madrid',
     'basePath' => dirname(__DIR__),
@@ -15,22 +13,22 @@ $config = [
     'bootstrap' => ['log'],
     'components' => [
         'session' => [
-            'name' => 'session-'.$appId,
+            'name' => 'session-back-'.APP_ID,
             // 'class' => 'yii\web\DbSession',
             // 'db' => 'mydb',  // the application component ID of the DB connection. Defaults to 'db'.
             // 'sessionTable' => 'my_session', // session table name. Defaults to 'session'.
         ],
         'request' => [
-            'cookieValidationKey' => COOKIE_VALIDATION_KEY.$appId,
+            'cookieValidationKey' => COOKIE_VALIDATION_KEY.'-back-'.APP_ID,
             'enableCsrfValidation' => true,
-            'csrfParam' => '_csrf-'.$appId,
+            'csrfParam' => '_csrf-back-'.APP_ID,
         ],
         'user' => [
             'class' => 'yii\web\User',
             'identityClass' => 'app\models\admin\Admin',
             'enableAutoLogin' => true,
             'identityCookie' => [
-                'name' => '_identity-'.$appId,
+                'name' => '_identity-back-'.APP_ID,
                 'httpOnly' => true,
             ],
             //'on afterLogin' => ['app\models\admin\Admin', 'afterLogin'],

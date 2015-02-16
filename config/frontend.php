@@ -2,26 +2,24 @@
 
 $params = require(__DIR__ . '/params.php');
 
-$appId = 'app-frontend';
-
 $config = [
     'name' => 'MyApp',
-    'id' => $appId,
+    'id' => APP_ID,
     'language' => 'en',
     'timeZone' => 'Europe/Madrid',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
         'session' => [
-            'name' => 'session-'.$appId,
+            'name' => 'session-'.APP_ID,
             // 'class' => 'yii\web\DbSession',
             // 'db' => 'mydb',  // the application component ID of the DB connection. Defaults to 'db'.
             // 'sessionTable' => 'my_session', // session table name. Defaults to 'session'.
         ],
         'request' => [
-            'cookieValidationKey' => COOKIE_VALIDATION_KEY.$appId,
+            'cookieValidationKey' => COOKIE_VALIDATION_KEY.'-'.APP_ID,
             'enableCsrfValidation' => true,
-            'csrfParam' => '_csrf-'.$appId,
+            'csrfParam' => '_csrf-'.APP_ID,
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
@@ -40,6 +38,10 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'identityCookie' => [
+                'name' => '_identity-'.APP_ID,
+                'httpOnly' => true,
+            ],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

@@ -68,11 +68,11 @@ This project assumes that a mysql database will be used. It must be created befo
 
 ### Environment configuration
 
-Copy the file `.env-sample.php` from the root directory to `.env.php` and customize the environment
+Open the file `.env.php` from the root directory and customize the environment
 variables, as well as the database connection details. This file can also be used to store any sensitive
 information that must not end up in the repository, such as api keys, passwords, etc.
 
-Edit the files in the `config/` directory and customize your application (id, name, language, timezone...).
+Edit the files in the `config/` directory and customize your application (name, language, timezone...).
 
 ### Apply migration
 

@@ -18,12 +18,16 @@
         "yiisoft/yii2-gii": "*",
         "yiisoft/yii2-faker": "*"
     },
+    "autoload": {
+        "psr-4": { "install\\": "install/" }
+    },
     "config": {
         "process-timeout": 1800
     },
     "scripts": {
         "post-create-project-cmd": [
-            "yii\\composer\\Installer::postCreateProject"
+            "yii\\composer\\Installer::postCreateProject",
+            "install\\App::postCreateProject"
         ]
     },
     "extra": {
@@ -31,7 +35,7 @@
             "setPermission": [
                 {
                     "yii": "0755",
-										"tests/codeception/bin/yii": "0755"
+                    "tests/codeception/bin/yii": "0755"
                 }
             ]
         },

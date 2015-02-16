@@ -5,7 +5,7 @@ Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 $params = require(__DIR__ . '/params.php');
 
 return [
-    'id' => 'app-console',
+    'id' => 'console-app',
     'basePath' => dirname(__DIR__),
     'timeZone' => 'Europe/Madrid',
     'bootstrap' => ['log', 'gii'],
