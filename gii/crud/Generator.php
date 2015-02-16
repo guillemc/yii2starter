@@ -105,6 +105,17 @@ class Generator extends \yii\gii\generators\crud\Generator
             ],
 EOT;
         }
+        if (in_array($column->name, $this->tsColumns)) {
+            return <<<EOT
+[
+                'attribute' => '{$column->name}',
+                'format' => 'datetime',
+                'headerOptions' => ['class' => 'sort-numerical'],
+                'filter' => false,
+                'contentOptions' => ['class' => 'text-center'],
+            ],
+EOT;
+        }
         if ($this->isBoolean($column)) {
             return <<<EOT
 [
@@ -154,7 +165,7 @@ EOT;
         if ($this->isBoolean($column)) {
             return "\$form->field(\$model, '$attribute')->checkbox()";
         }
-        
+
         return parent::generateActiveField($attribute);
     }
 }
