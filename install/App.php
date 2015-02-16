@@ -30,20 +30,24 @@ class App
     {
         $directories = implode(' ', static::$writableDirectories);
         $command = "sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX ".$directories;
-        exec($command);
         $io->write($command);
+        exec($command);
 
         $command = "sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX ".$directories;
-        exec($command);
         $io->write($command);
+        exec($command);
     }
 
     public static function copyEnv()
     {
         copy('.env-sample.php', '.env.php');
 
+        $appId = strtolower(basename(getcwd()));
+
         $replaces = array(
-            'my-app-id' => basename(getcwd()),
+            'my-app-id' => $appId,
+            'mydbname' => $appId,
+            'mydbname_test' => "$appId-test",
             'some random string - CHANGE IT!' => static::generateRandomString(),
         );
         static::applyValues('.env.php', $replaces);
