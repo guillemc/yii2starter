@@ -73,6 +73,11 @@ if ($model->isNewRecord) {
     <button data-dismiss="alert" class="close" type="button">×</button>
     <?= '<?= ' ?>Yii::t('admin', 'Please fix the errors marked in red below.') ?>
     </div>
+    <?= '<?php ' ?>elseif (Yii::$app->session->getFlash('data.saved')): ?>
+    <div class="alert alert-success">
+    <button data-dismiss="alert" class="close" type="button">×</button>
+    <?= '<?= ' ?>Yii::t('admin', 'Data successfully saved.') ?>
+    </div>
     <?= '<?php ' ?>endif ?>
 
 <?php $i = 0; foreach ($generator->getColumnNames() as $attribute) {
@@ -87,7 +92,9 @@ if ($model->isNewRecord) {
 
 <div class="panel-footer">
     <?= '<?= ' ?>Html::a('<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;'.Yii::t('admin', 'Back'), ['index'], ['class' => 'btn btn-default', 'data-action' => 'back']) ?>
-    <?= '<?= ' ?>Html::submitButton( ($model->isNewRecord ? Yii::t('admin', 'Create') : Yii::t('admin', 'Update')).'&nbsp;<i class="fa fa-check"></i>', ['class' => 'btn btn-success']) ?>
+    <?= '<?= ' ?>Html::submitButton( ($model->isNewRecord ? Yii::t('admin', 'Create') : Yii::t('admin', 'Save')).'&nbsp;<i class="fa fa-check"></i>', ['class' => 'btn btn-success']) ?>
+    <?php if ($generator->saveAndReturn): ?><?= '<?= ' ?>Html::submitButton( ($model->isNewRecord ? Yii::t('admin', 'Create and return') : Yii::t('admin', 'Save and return')).'&nbsp;<i class="fa fa-check"></i>', ['class' => 'btn btn-success', 'onclick' => "this.form['continue'].value='0'; return true;"]) ?>
+    <input type="hidden" name="continue" value="1" /><?php endif ?>
 </div>
 
 <?= '<?php ' ?>ActiveForm::end(); ?>

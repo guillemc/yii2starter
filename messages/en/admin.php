@@ -64,4 +64,6 @@ return [
     'Username' => '',
     'Welcome, {username}. Please choose your new password:' => '',
     '{attribute} "{value}" is already in use.' => '',
+    'Create and return' => '',
+    'Save and return' => '',
 ];

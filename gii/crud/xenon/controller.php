@@ -114,7 +114,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 return $this->redirect(['update', 'id' => $model->id]);
             }<?php endif ?>
 
-            return $this->redirect(['index', <?= $urlParams ?>]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('edit', compact('model'));
@@ -136,7 +136,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 return $this->refresh();
             }<?php endif ?>
 
-            return $this->redirect(['view', <?= $urlParams ?>]);
+            return $this->redirect(['index']);
         }
 
         return $this->render('edit', compact('model'));

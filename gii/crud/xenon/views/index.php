@@ -57,6 +57,13 @@ $this->beginBlock('buttons');
 
 <div class="panel-body">
 
+    <?= '<?php ' ?>if (Yii::$app->session->getFlash('data.saved')): ?>
+    <div class="alert alert-success">
+    <button data-dismiss="alert" class="close" type="button">×</button>
+    <?= '<?= ' ?>Yii::t('admin', 'Data successfully saved.') ?>
+    </div>
+    <?= '<?php ' ?>endif ?>
+
     <?= '<?php ' ?>echo $this->blocks['buttons'] ?>
 
 
