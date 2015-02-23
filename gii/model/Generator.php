@@ -155,4 +155,13 @@ class Generator extends \yii\gii\generators\model\Generator
         return $str ?  preg_split("/[\s,]+/", $str, -1, PREG_SPLIT_NO_EMPTY) : [];
     }
 
+    public function generateLabels($table)
+    {
+        $labels = parent::generateLabels($table);
+        array_walk($labels, function (&$value) {
+            $value = ucfirst(strtolower($value));
+        });
+        return $labels;
+    }
+
 }

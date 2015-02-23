@@ -7,15 +7,22 @@ use Composer\Script\Event;
 class App
 {
 
-    protected static $writableDirectories = ['runtime', 'web/assets'];
+    protected static $writableDirectories = ['runtime', 'web/assets', 'web/files'];
 
+    /*
+     * To manually run all the post-create-project scripts, execute: composer run-script post-create-project-cmd
+     */
     public static function postCreateProject(Event $e)
     {
         //$composer = $e->getComposer();
         $io = $e->getIO();
 
-        static::copyEnv();
-        $io->write('Copied .env-sample.php to .env.php');
+        if ($io->askConfirmation('Generate/replace .env.php file? (y/n)')) {
+            static::copyEnv();
+            $io->write('Generated .env.php');
+        } elseif (!file_exists('.env.php')) {
+            $io->write('Remember to create file .env.php with your own settings, using .env-sample.php as a base.');
+        }
 
         if ($io->askConfirmation('Set write permissions using the setfacl command? (y/n)')) {
             static::setPermissions($io);

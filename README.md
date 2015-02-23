@@ -1,5 +1,5 @@
 Yii 2 Starter Application Template
-================================
+==================================
 
 Yii 2 Starter Application Template is a skeleton Yii 2 application best for
 rapidly creating small to medium sized projects.
@@ -9,7 +9,7 @@ but provides two separate applications, for the frontend and the backend. Unlike
 [Yii 2 Advanced Application Template](https://github.com/yiisoft/yii2-app-advanced), here the
 two apps share the same webroot, and are accessed using different entry scripts.
 
-The template contains basic backend functionality such as password reset and administrator management.
+The template contains basic backend functionality such as password reset, administrator and user management.
 
 The backend is built upon the [xenon admin theme](http://xenontheme.com/) (not included).
 
@@ -21,6 +21,7 @@ DIRECTORY STRUCTURE
       config/             contains application configurations
       controllers/        contains Web controller classes
       gii/                contains code generator templates
+      install/            contains the post-installation script
       mail/               contains view files for e-mails
       messages/           contains the translation files
       migrations/         contains the database migrations
@@ -30,6 +31,8 @@ DIRECTORY STRUCTURE
       vendor/             contains dependent 3rd-party packages
       views/              contains view files for the Web application
       web/                contains the entry scripts (index.php and back.php) and Web resources
+        assets/           directory for the auto-published yii assets
+        files/            directory for user uploads
 
 
 
@@ -60,7 +63,9 @@ CONFIGURATION
 
 ### Filesystem permissions
 
-The webserver needs write access to the `runtime` and `web/assets` directories.
+The webserver needs write access to the `runtime`, `web/assets` and `web/files` directories. 
+The install script can attempt to do this, but in a pretty harcoded way (using setfacl commands 
+and assuming an apache `www-data` user).
 
 ### Database
 
@@ -76,8 +81,8 @@ Edit the files in the `config/` directory and customize your application (name, 
 
 ### Apply migration
 
-Run `./yii migrate` from the console. This will create the administrators table, and the root administration
-user `admin` with password `admin`.
+Run `./yii migrate` from the console. This will create the administrators table (with the root administration
+user `admin` with password `admin`) and the users table.
 
 ### Application URLs
 

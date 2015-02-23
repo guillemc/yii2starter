@@ -43,6 +43,7 @@ return [
     'Invalid username or password.' => 'Nombre de usuario y/o contraseña incorrectos.',
     'Items per page' => 'Elementos por página',
     'Leave blank to keep current password.' => 'En blanco para mantener la contraseña actual.',
+    'Leave blank to keep the current password.' => 'Dejar en blanco para mantener contraseña actual.',
     'Log in' => 'Entrar',
     'Login' => 'Entrar',
     'Logout' => 'Salir',
@@ -66,6 +67,7 @@ return [
     'Update' => 'Actualizar',
     'Used for password reset.' => 'Se usa para restablecer contraseña.',
     'Username' => 'Nombre de usuario',
+    'Users' => 'Usuarios',
     'Welcome, {username}. Please choose your new password:' => 'Hola, {username}. Por favor, elige tu nueva contraseña:',
     '{attribute} "{value}" is already in use.' => '{attribute} "{value}" ya está en uso.',
 ];

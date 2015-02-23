@@ -97,7 +97,9 @@ $config = [
             ],
         ],
     ],
-    'params' => $params,
+    'params' => array_merge([        
+        'user.token_expire' => 3600,        
+    ], $params),
 ];
 
 if (YII_ENV_DEV) {
