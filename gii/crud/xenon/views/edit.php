@@ -28,7 +28,7 @@ $newLabel = Yii::t('admin', 'New');
 
 $label = $model->isNewRecord ? $newLabel : $model->getLabel();
 
-$this->title = $title.': '.$label.' | '.Yii::$app->name;;;
+$this->title = $title.': '.$label.' | '.Yii::$app->name;
 
 $this->params['page_title'] = $title;
 $this->params['page_subtitle'] = $model->isNewRecord ? '<i class="fa fa-star"></i>&nbsp;'.$label : '<span class="label label-default">'.$model->id.'</span>&nbsp;'.$label;

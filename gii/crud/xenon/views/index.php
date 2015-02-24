@@ -22,7 +22,7 @@ use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\w
 $title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
 $addNewLabel = Yii::t('admin', 'Add new');
 
-$this->title = $title.' | '.Yii::$app->name;;;
+$this->title = $title.' | '.Yii::$app->name;
 
 $this->params['breadcrumbs'][] = $title;
 

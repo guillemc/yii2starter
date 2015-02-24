@@ -21,7 +21,7 @@ $title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2wo
 
 $label = $model->getLabel();
 
-$this->title = $title.': '.$label.' | '.Yii::$app->name;;;
+$this->title = $title.': '.$label.' | '.Yii::$app->name;
 
 $this->params['page_title'] = $title;
 $this->params['page_subtitle'] = '<span class="label label-default">'.$model->id.'</span> '.$label;
