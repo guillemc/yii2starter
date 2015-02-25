@@ -19,7 +19,7 @@
 return [
     'No' => 'No',
     'Yes' => 'Sí',
-    'Add new' => 'Añadir nuevo',
+    'Add new' => 'Añadir {g, select, m{nuevo} f{nueva}}',
     'Administrators' => 'Administradores',
     'An email has been sent to {email} with further instructions.' => 'Se ha enviado un email a {email} con instrucciones.',
     'Are you sure you want to delete this item?' => '¿Está seguro que desea eliminar este elemento?',
@@ -48,7 +48,7 @@ return [
     'Login' => 'Entrar',
     'Logout' => 'Salir',
     'Missing password reset token.' => 'Falta el parámetro de restablecimiento de contraseña.',
-    'New' => 'Nuevo',
+    'New' => '{g, select, m{Nuevo} f{Nueva}}',
     'No matching user found.' => 'No se ha encontrado ningún usuario que coincida.',
     'Password' => 'Contraseña',
     'Password reset' => 'Restablecer contraseña',

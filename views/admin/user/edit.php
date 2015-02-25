@@ -8,11 +8,11 @@ use yii\bootstrap\ActiveForm;
 /* @var $form yii\bootstrap\ActiveForm */
 
 $title = Yii::t('app', 'Users');
-$newLabel = Yii::t('admin', 'New');
+$newLabel = Yii::t('admin', 'New', ['g' => 'm']); //gender: 'm' or 'f'
 
 $label = $model->isNewRecord ? $newLabel : $model->getLabel();
 
-$this->title = $title.': '.$label.' | '.Yii::$app->name;;;
+$this->title = $title.': '.$label.' | '.Yii::$app->name;
 
 $this->params['page_title'] = $title;
 $this->params['page_subtitle'] = $model->isNewRecord ? '<i class="fa fa-star"></i>&nbsp;'.$label : '<span class="label label-default">'.$model->id.'</span>&nbsp;'.$label;

@@ -8,9 +8,9 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $title = Yii::t('app', 'Users');
-$addNewLabel = Yii::t('admin', 'Add new');
+$addNewLabel = Yii::t('admin', 'Add new', ['g' => 'm']); //gender: 'm' or 'f'
 
-$this->title = $title.' | '.Yii::$app->name;;;
+$this->title = $title.' | '.Yii::$app->name;
 
 $this->params['breadcrumbs'][] = $title;
 

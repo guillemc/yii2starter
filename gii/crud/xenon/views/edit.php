@@ -24,7 +24,7 @@ use yii\bootstrap\ActiveForm;
 /* @var $form yii\bootstrap\ActiveForm */
 
 $title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
-$newLabel = Yii::t('admin', 'New');
+$newLabel = Yii::t('admin', 'New', ['g' => 'm']); //gender: 'm' or 'f'
 
 $label = $model->isNewRecord ? $newLabel : $model->getLabel();
 

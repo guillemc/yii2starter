@@ -8,11 +8,11 @@ use yii\bootstrap\ActiveForm;
 /* @var $m app\models\admin\ProfileForm */
 
 $title = Yii::t('admin', 'Administrators');
-$newLabel = Yii::t('admin', 'New');
+$newLabel = Yii::t('admin', 'New', ['g' => 'm']); //gender: 'm' or 'f'
 
 $label = $model->isNewRecord ? $newLabel : $model->getLabel();
 
-$this->title = $title.': '.$label.' | '.Yii::$app->name;;
+$this->title = $title.': '.$label.' | '.Yii::$app->name;
 
 $this->params['page_title'] = $title;
 $this->params['page_subtitle'] = $model->isNewRecord ? '<i class="fa fa-star"></i>&nbsp;'.$label : '<span class="label label-default">'.$model->id.'</span>&nbsp;'.$label;
@@ -31,7 +31,7 @@ if ($model->isNewRecord) {
 
 <div class="panel-heading">
     <div class="panel-options">
-        <?= Html::a('<i class="fa fa-star-o"></i>', ['create'], ['title' => Yii::t('admin', 'New'), 'rel' => 'external']) ?>
+        <?= Html::a('<i class="fa fa-star-o"></i>', ['create'], ['title' => $newLabel, 'rel' => 'external']) ?>
     </div>
 </div>
 

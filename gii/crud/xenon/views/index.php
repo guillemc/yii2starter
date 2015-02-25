@@ -20,7 +20,7 @@ use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\w
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $title = <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words(StringHelper::basename($generator->modelClass)))) ?>;
-$addNewLabel = Yii::t('admin', 'Add new');
+$addNewLabel = Yii::t('admin', 'Add new', ['g' => 'm']); //gender: 'm' or 'f'
 
 $this->title = $title.' | '.Yii::$app->name;
 

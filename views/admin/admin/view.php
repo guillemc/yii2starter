@@ -10,7 +10,7 @@ $title = Yii::t('admin', 'Administrators');
 
 $label = $model->getLabel();
 
-$this->title = $title.': '.$label.' | '.Yii::$app->name;;
+$this->title = $title.': '.$label.' | '.Yii::$app->name;
 
 $this->params['page_title'] = $title;
 $this->params['page_subtitle'] = '<span class="label label-default">'.$model->id.'</span> '.$label;
