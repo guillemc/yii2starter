@@ -12,6 +12,7 @@ $addNewLabel = Yii::t('admin', 'Add new', ['g' => 'm']); //gender: 'm' or 'f'
 
 $this->title = $title.' | '.Yii::$app->name;
 
+$this->params['page_title'] = $title;
 $this->params['breadcrumbs'][] = $title;
 
 $this->beginBlock('buttons');
