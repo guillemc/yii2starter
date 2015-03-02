@@ -17,8 +17,10 @@ class App
         //$composer = $e->getComposer();
         $io = $e->getIO();
 
+        static::customizeSampleEnvFile();
+
         if ($io->askConfirmation('Generate/replace .env.php file? (y/n)')) {
-            static::copyEnv();
+            copy('.env-sample.php', '.env.php');
             $io->write('Generated .env.php');
         } elseif (!file_exists('.env.php')) {
             $io->write('Remember to create file .env.php with your own settings, using .env-sample.php as a base.');
@@ -29,8 +31,6 @@ class App
         } else {
             $io->write('Remember to give the webserver write permissions over these directories: '.implode(', ', static::$writableDirectories));
         }
-
-
     }
 
     public static function setPermissions($io)
@@ -45,10 +45,8 @@ class App
         exec($command);
     }
 
-    public static function copyEnv()
+    public static function customizeSampleEnvFile()
     {
-        copy('.env-sample.php', '.env.php');
-
         $appId = strtolower(basename(getcwd()));
 
         $replaces = array(
@@ -57,7 +55,7 @@ class App
             'mydbname_test' => "$appId-test",
             'some random string - CHANGE IT!' => static::generateRandomString(),
         );
-        static::applyValues('.env.php', $replaces);
+        static::applyValues('.env-sample.php', $replaces);
     }
 
     /* copied from vendor/yiisoft/yii2-composer/Installer.php */
