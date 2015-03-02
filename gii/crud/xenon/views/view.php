@@ -59,6 +59,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         ],
     ]) ?>
 
+</div>
 <div class="panel-footer">
     <?= '<?= ' ?>Html::a('<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;'.Yii::t('admin', 'Back'), ['index'], ['class' => 'btn btn-default', 'data-action' => 'back']) ?>
     <?= '<?= ' ?>Html::a(Yii::t('admin', 'Edit').'&nbsp;<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
