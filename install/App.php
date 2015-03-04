@@ -53,22 +53,10 @@ class App
             'my-app-id' => $appId,
             'mydbname' => $appId,
             'mydbname_test' => "$appId-test",
-            'some random string - CHANGE IT!' => static::generateRandomString(),
+            'some random string - CHANGE IT!' => Installer::randomString(),
         );
         static::applyValues('.env-sample.php', $replaces);
     }
-
-    /* copied from vendor/yiisoft/yii2-composer/Installer.php */
-    protected static function generateRandomString()
-    {
-        if (!extension_loaded('mcrypt')) {
-            throw new \Exception('The mcrypt PHP extension is required by Yii2.');
-        }
-        $length = 32;
-        $bytes = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
-        return strtr(substr(base64_encode($bytes), 0, $length), '+/=', '_-.');
-    }
-
 
     protected static function applyValues($target, $replaces)
     {
@@ -79,5 +67,13 @@ class App
                 $replaces
             )
         );
+    }
+}
+
+class Installer extends \yii\composer\Installer
+{
+    public static function randomString()
+    {
+        return parent::generateRandomString();
     }
 }
