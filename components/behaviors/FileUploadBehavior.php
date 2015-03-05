@@ -309,6 +309,10 @@ class FileUploadBehavior extends \yii\base\Behavior
 
     protected function onFileDeleted($fileAttr)
     {
+        $e = new FileUploadEvent();
+        $e->attribute = $fileAttr;
+        $this->owner->trigger(static::EVENT_AFTER_FILE_DELETE, $e);
+        
         $this->owner->$fileAttr = null;
         if (null !== ($sizeAttr = ArrayHelper::getValue($this->config[$fileAttr], 'size'))) {
             $this->owner->$sizeAttr = null;
@@ -316,10 +320,6 @@ class FileUploadBehavior extends \yii\base\Behavior
         if (null !== ($typeAttr = ArrayHelper::getValue($this->config[$fileAttr], 'type'))) {
             $this->owner->$typeAttr = null;
         }
-
-        $e = new FileUploadEvent();
-        $e->attribute = $fileAttr;
-        $this->owner->trigger(static::EVENT_AFTER_FILE_DELETE, $e);
     }
 
 

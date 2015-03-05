@@ -49,7 +49,7 @@ class ImageUploadBehavior extends FileUploadBehavior
             ],
         ],
     ];
-    
+
     public $defaultJpegQuality = 80;
 
 
@@ -138,22 +138,22 @@ class ImageUploadBehavior extends FileUploadBehavior
         if (null === $fromPath) {
             $fromPath = $this->getFilePath($attr);
         }
-        
+
         foreach ($this->resizeConfig[$attr] as $size => $specs) {
             $this->createResizedImage($fromPath, $size, $specs);
-        }        
+        }
     }
-    
+
     public function createResizedImage($path, $name, $specs)
     {
         $img = Image::getImagine()->open($path);
         $size = $img->getSize();
-        
+
         $w = ArrayHelper::getValue($specs, 'w');
         $h = ArrayHelper::getValue($specs, 'h');
-        
+
         if (!$w && !$h) return;
-        
+
         if (!$w) {
             $newSize = $size->heighten($h);
         } elseif (!$h) {
@@ -161,25 +161,27 @@ class ImageUploadBehavior extends FileUploadBehavior
         } else {
             $newSize = new Box($w, $h);
         }
-        
-        $mode = 'fit' == ArrayHelper::getValue($specs, 'method', 'crop') ? ManipulatorInterface::THUMBNAIL_INSET : ManipulatorInterface::THUMBNAIL_OUTBOUND;        
-        
+
+        $mode = 'fit' == ArrayHelper::getValue($specs, 'method', 'crop') ? ManipulatorInterface::THUMBNAIL_INSET : ManipulatorInterface::THUMBNAIL_OUTBOUND;
+
         $options = ['jpeg_quality' => ArrayHelper::getValue($specs, 'quality', $this->defaultJpegQuality)];
-        
+
         $suffix = ArrayHelper::getValue($specs, 'suffix', "-{$size}");
         $newPath = static::addSuffix($path, $suffix);
-        
+
         $img->thumbnail($newSize, $mode)->save($newPath, $options);
-        
+
     }
 
     public function deleteSizes($attr)
     {
         if (!isset($this->resizeConfig[$attr])) return;
-        
+
         foreach ($this->resizeConfig[$attr] as $size => $specs) {
            $path = $this->getImagePath($size, $attr);
-           if (file_exists($path)) @unlink($path);
+           if (file_exists($path)) {
+               unlink($path);
+           }
         }
     }
 
@@ -192,7 +194,6 @@ class ImageUploadBehavior extends FileUploadBehavior
         if (null !== ($hAttr = ArrayHelper::getValue($this->config[$attr], 'h'))) {
             $this->owner->$hAttr = null;
         }
-
         $this->deleteSizes($attr);
     }
 
