@@ -104,7 +104,7 @@ class ImageUploadBehavior extends FileUploadBehavior
     {
         if (!$imgAttr) $imgAttr = $this->defaultFileAttribute;
         $name = $this->getImageName($size, $imgAttr);
-        $route = $this->baseUrl.'/'. $this->dir.'/'.$name;
+        $route = $this->baseUrl.'/'. $this->getDir().'/'.$name;
         return Url::to($route, $scheme);
     }
 
