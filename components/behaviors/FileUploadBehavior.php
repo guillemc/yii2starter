@@ -94,13 +94,36 @@ class FileUploadBehavior extends \yii\base\Behavior
             throw new CException('Missing dirName attribute.');
         }
 
-        if (is_callable($this->dirName)) {
-            $func = $this->dirName;
-            $this->dir = $func($this->owner);
-        } else {
-            $this->dir = $this->dirName;
+        foreach ($this->config as $fileAttr => $config) {
+            $uploadAttr = ArrayHelper::getValue($config, 'upload');
+            if (!$uploadAttr || !property_exists($this->owner, $uploadAttr)) {
+                throw new Exception("Please specify the 'upload' attribute for '$fileAttr'");
+            }
         }
 
+        $this->defaultFileAttribute = key($this->config);
+    }
+
+    public function getDir()
+    {
+        if (!isset($this->dir)) {
+            if (is_callable($this->dirName)) {
+                $func = $this->dirName;
+                $this->dir = $func($this->owner);
+            } else {
+                $this->dir = $this->dirName;
+            }
+        }
+        return $this->dir;
+    }
+
+    public function getBaseFilePath()
+    {
+        return Yii::getAlias($this->basePath).'/'.$this->getDir();
+    }
+
+    protected function ensureBaseFilePath()
+    {
         $basePath = $this->getBaseFilePath();
         if (!is_dir($basePath) && isset($this->createDirMode)) {
             // To create a nested structure, the $recursive parameter
@@ -109,24 +132,9 @@ class FileUploadBehavior extends \yii\base\Behavior
                 throw new Exception('Unable to create directory: '.$basePath);
             }
         }
-
-        foreach ($this->config as $fileAttr => $config) {
-            $uploadAttr = ArrayHelper::getValue($config, 'upload');
-            if (!$uploadAttr || !property_exists($this->owner, $uploadAttr)) {
-                throw new Exception("Please specify the 'upload' attribute for '$fileAttr'");
-            }
-        }
-
         if (!is_writable($basePath)) {
             throw new Exception("Directory '{$basePath}' is not writable.");
         }
-
-        $this->defaultFileAttribute = key($this->config);
-    }
-
-    public function getBaseFilePath()
-    {
-        return Yii::getAlias($this->basePath).'/'.$this->dir;
     }
 
     public function getFilePath($fileAttr = null)
@@ -138,7 +146,7 @@ class FileUploadBehavior extends \yii\base\Behavior
     public function getFileUrl($fileAttr = null, $scheme = false)
     {
         if (!$fileAttr) $fileAttr = $this->defaultFileAttribute;
-        $route = $this->baseUrl.'/'. $this->dir.'/'.$this->owner->$fileAttr;
+        $route = $this->baseUrl.'/'. $this->getDir().'/'.$this->owner->$fileAttr;
         return Url::to($route, $scheme);
     }
 
@@ -177,6 +185,8 @@ class FileUploadBehavior extends \yii\base\Behavior
 
     public function beforeSave($event)
     {
+        $this->ensureBaseFilePath();
+
         foreach ($this->config as $fileAttr => $config) {
             // delete current file: if autoRemoveOld is set and there is a file upload
             // or if a remove attribute is present and true
@@ -223,6 +233,12 @@ class FileUploadBehavior extends \yii\base\Behavior
         }
     }
 
+    /**
+     *
+     * @param UploadedFile $file
+     * @param string $fileAttr
+     * @return array|null
+     */
     protected function saveUploadedFile($file, $fileAttr)
     {
         $name = $this->makeFileName($file->name, $fileAttr);
@@ -312,7 +328,7 @@ class FileUploadBehavior extends \yii\base\Behavior
         $e = new FileUploadEvent();
         $e->attribute = $fileAttr;
         $this->owner->trigger(static::EVENT_AFTER_FILE_DELETE, $e);
-        
+
         $this->owner->$fileAttr = null;
         if (null !== ($sizeAttr = ArrayHelper::getValue($this->config[$fileAttr], 'size'))) {
             $this->owner->$sizeAttr = null;
