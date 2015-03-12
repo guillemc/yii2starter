@@ -48,13 +48,14 @@ class FileUploadBehavior extends \yii\base\Behavior
 
     /**
      * @var array attribute configuration, indexed by the fields that will hold the uploaded file names.
-     * The values specify related fields or attributes. At least the 'upload' attribute should be specified. Example:
      * [
      *   'my_file' => [
-     *     'upload' => 'myFileUpload', // model attribute that will hold the uploaded file
+     *     'upload' => 'myFileUpload', // model attribute that will hold the uploaded file. This is the only mandatory field.
      *     'remove' => 'myFileRemove', // model attribute (boolean) that will be checked for removing the current file
-     *     'type' => 'my_file_type', // model attribute / table field for storing the file type
-     *     'size' => 'my_file_size', // model attribute / table field for storing the file size
+     *     'extra' => [
+     *          'my_file_size' => function ($fileInfo) { return $fileInfo['size']; },
+     *          'my_file_type' => function ($fileInfo) { return $fileInfo['type']; },
+     *      ],
      *   ],
      *   'my_other_file' => ...
      * ]
@@ -94,10 +95,10 @@ class FileUploadBehavior extends \yii\base\Behavior
             throw new CException('Missing dirName attribute.');
         }
 
-        foreach ($this->config as $fileAttr => $config) {
-            $uploadAttr = ArrayHelper::getValue($config, 'upload');
-            if (!$uploadAttr || !property_exists($this->owner, $uploadAttr)) {
-                throw new Exception("Please specify the 'upload' attribute for '$fileAttr'");
+        foreach ($this->config as $fileAttribute => $config) {
+            $uploadAttribute = ArrayHelper::getValue($config, 'upload');
+            if (!$uploadAttribute || !property_exists($this->owner, $uploadAttribute)) {
+                throw new Exception("Please specify the 'upload' attribute for '$fileAttribute'");
             }
         }
 
@@ -137,36 +138,36 @@ class FileUploadBehavior extends \yii\base\Behavior
         }
     }
 
-    public function getFilePath($fileAttr = null)
+    public function getFilePath($fileAttribute = null)
     {
-        if (!$fileAttr) $fileAttr = $this->defaultFileAttribute;
-        return $this->getBaseFilePath().'/'.$this->owner->$fileAttr;
+        if (!$fileAttribute) $fileAttribute = $this->defaultFileAttribute;
+        return $this->getBaseFilePath().'/'.$this->owner->$fileAttribute;
     }
 
-    public function getFileUrl($fileAttr = null, $scheme = false)
+    public function getFileUrl($fileAttribute = null, $scheme = false)
     {
-        if (!$fileAttr) $fileAttr = $this->defaultFileAttribute;
-        $route = $this->baseUrl.'/'. $this->getDir().'/'.$this->owner->$fileAttr;
+        if (!$fileAttribute) $fileAttribute = $this->defaultFileAttribute;
+        $route = $this->baseUrl.'/'. $this->getDir().'/'.$this->owner->$fileAttribute;
         return Url::to($route, $scheme);
     }
 
-    public function unlinkFile($fileAttr = null)
+    public function unlinkFile($fileAttribute = null)
     {
-        if (!$fileAttr) $fileAttr = $this->defaultFileAttribute;
-        if (!$this->owner->$fileAttr) return;
+        if (!$fileAttribute) $fileAttribute = $this->defaultFileAttribute;
+        if (!$this->owner->$fileAttribute) return;
 
-        @unlink($this->getFilePath($fileAttr));
+        @unlink($this->getFilePath($fileAttribute));
 
-        $this->onFileDeleted($fileAttr);
+        $this->onFileDeleted($fileAttribute);
     }
 
     protected function prepareUploadedFiles()
     {
-        foreach ($this->config as $fileAttr => $config) {
-            $uploadAttr = $config['upload'];
-            $file = $this->owner->$uploadAttr;
+        foreach ($this->config as $fileAttribute => $config) {
+            $uploadAttribute = $config['upload'];
+            $file = $this->owner->$uploadAttribute;
             if (!$file) {
-                $this->owner->$uploadAttr = UploadedFile::getInstance($this->owner, $uploadAttr);
+                $this->owner->$uploadAttribute = UploadedFile::getInstance($this->owner, $uploadAttribute);
             }
         }
     }
@@ -187,15 +188,15 @@ class FileUploadBehavior extends \yii\base\Behavior
     {
         $this->ensureBaseFilePath();
 
-        foreach ($this->config as $fileAttr => $config) {
+        foreach ($this->config as $fileAttribute => $config) {
             // delete current file: if autoRemoveOld is set and there is a file upload
             // or if a remove attribute is present and true
-            $uploadAttr = $config['upload'];
-            $removeAttr = ArrayHelper::getValue($config, 'remove');
-            if ( ($this->autoRemoveOld && !empty($this->owner->$uploadAttr))
-                || (property_exists($this->owner, $removeAttr) && $this->owner->$removeAttr)
+            $uploadAttribute = $config['upload'];
+            $removeAttribute = ArrayHelper::getValue($config, 'remove');
+            if ( ($this->autoRemoveOld && !empty($this->owner->$uploadAttribute))
+                || ($removeAttribute && property_exists($this->owner, $removeAttribute) && $this->owner->$removeAttribute)
             ) {
-                $this->unlinkFile($fileAttr);
+                $this->unlinkFile($fileAttribute);
             }
         }
 
@@ -209,27 +210,26 @@ class FileUploadBehavior extends \yii\base\Behavior
     public function afterSave($event)
     {
         $this->updateAttributes = [];
-        foreach ($this->config as $fileAttr => $config) {
-            $uploadAttr = ArrayHelper::getValue($config, 'upload');
-            if ($uploadAttr && property_exists($this->owner, $uploadAttr)) {
-                $this->saveFile($fileAttr, $this->owner->$uploadAttr);
+        foreach ($this->config as $fileAttribute => $config) {
+            $uploadAttribute = ArrayHelper::getValue($config, 'upload');
+            if ($uploadAttribute && property_exists($this->owner, $uploadAttribute)) {
+                $this->saveFile($fileAttribute, $this->owner->$uploadAttribute);
             }
         }
         $this->owner->updateAttributes($this->updateAttributes);
     }
 
-    protected function saveFile($fileAttr, $file)
+    protected function saveFile($fileAttribute, $file)
     {
         if (!$file) return;
-
+        $fileInfo = [];
         if ($file instanceof UploadedFile && !$file->getHasError()) {
-            $data = $this->saveUploadedFile($file, $fileAttr);
+            $fileInfo = $this->saveUploadedFile($file, $fileAttribute);
         } elseif (is_string($file)) { // is it a path?
-            $data = $this->saveFileFromPath($file, $fileAttr);
+            $fileInfo = $this->saveFileFromPath($file, $fileAttribute);
         }
-
-        if ($data) {
-            $this->onFileSaved($fileAttr, $data);
+        if ($fileInfo) {
+            $this->onFileSaved($fileAttribute, $fileInfo);
         }
     }
 
@@ -239,14 +239,15 @@ class FileUploadBehavior extends \yii\base\Behavior
      * @param string $fileAttr
      * @return array|null
      */
-    protected function saveUploadedFile($file, $fileAttr)
+    protected function saveUploadedFile($file, $fileAttribute)
     {
-        $name = $this->makeFileName($file->name, $fileAttr);
+        $name = $this->makeFileName($file->name, $fileAttribute);
         $destPath = $this->getBaseFilePath().'/'.$name;
         if ($file->saveAs($destPath, $this->deleteTempFile)) {
             return [
                 'path' => $destPath,
                 'name' => $name,
+                'original_name' => basename($file->name),
                 'size' => $file->size,
                 'type' => $file->type,
             ];
@@ -254,11 +255,11 @@ class FileUploadBehavior extends \yii\base\Behavior
         return null;
     }
 
-    protected function saveFileFromPath($file, $fileAttr)
+    protected function saveFileFromPath($file, $fileAttribute)
     {
         $path = Yii::getAlias($file);
         if (!file_exists($path)) return null;
-        $name = $this->makeFileName($path, $fileAttr);
+        $name = $this->makeFileName($path, $fileAttribute);
         $destPath = $this->getBaseFilePath().'/'.$name;
 
         $success = true;
@@ -271,12 +272,13 @@ class FileUploadBehavior extends \yii\base\Behavior
         return [
             'path' => $destPath,
             'name' => $name,
+            'original_name' => basename($path),
             'size' => filesize($destPath),
             'type' => FileHelper::getMimeType($destPath),
         ];
     }
 
-    protected function makeFileName($path, $fileAttr)
+    protected function makeFileName($path, $fileAttribute)
     {
         $pi = pathinfo($path);
         /* $pi = pathinfo('/www/htdocs/inc/lib.inc.php');
@@ -289,7 +291,7 @@ class FileUploadBehavior extends \yii\base\Behavior
         $fileName = Inflector::slug($pi['filename']).'.'.$ext;
         if ($this->fileNameCallback) {
             $func = $this->fileNameCallback;
-            $fileName = trim($func($this->owner, $fileName, $ext, $fileAttr), '/');
+            $fileName = trim($func($this->owner, $fileName, $ext, $fileAttribute), '/');
         }
 
         if (false !== strpos($fileName, '/')) {
@@ -308,41 +310,49 @@ class FileUploadBehavior extends \yii\base\Behavior
         }
     }
 
-    protected function onFileSaved($fileAttr, $data)
+    protected function onFileSaved($fileAttribute, $fileInfo)
     {
-        $this->updateAttributes[$fileAttr] = $data['name'];
-        if (null !== ($sizeAttr = ArrayHelper::getValue($this->config[$fileAttr], 'size'))) {
-            $this->updateAttributes[$sizeAttr] = $data['size'];
-        }
-        if (null !== ($typeAttr = ArrayHelper::getValue($this->config[$fileAttr], 'type'))) {
-            $this->updateAttributes[$typeAttr] = $data['type'];
-        }
         $e = new FileUploadEvent();
-        $e->attribute = $fileAttr;
-        $e->fileInfo = $data;
+        $e->attribute = $fileAttribute;
+        $e->fileInfo = $fileInfo;
         $this->owner->trigger(static::EVENT_AFTER_FILE_SAVE, $e);
     }
 
-    protected function onFileDeleted($fileAttr)
+    public function afterFileSave($event)
+    {
+        $fileAttribute = $event->attribute;
+        $fileInfo = $event->fileInfo;
+
+        $this->updateAttributes[$fileAttribute] = $fileInfo['name'];
+        $extraAttributes = ArrayHelper::getValue($this->config[$fileAttribute], 'extra', []);
+        foreach ($extraAttributes as $k => $v) {
+            $this->updateAttributes[$k] = is_callable($v) ? $v($fileInfo, $this->owner) : ArrayHelper::getValue($fileInfo, $v);
+        }
+    }
+
+    protected function onFileDeleted($fileAttribute)
     {
         $e = new FileUploadEvent();
-        $e->attribute = $fileAttr;
+        $e->attribute = $fileAttribute;
         $this->owner->trigger(static::EVENT_AFTER_FILE_DELETE, $e);
+    }
 
-        $this->owner->$fileAttr = null;
-        if (null !== ($sizeAttr = ArrayHelper::getValue($this->config[$fileAttr], 'size'))) {
-            $this->owner->$sizeAttr = null;
-        }
-        if (null !== ($typeAttr = ArrayHelper::getValue($this->config[$fileAttr], 'type'))) {
-            $this->owner->$typeAttr = null;
+    public function afterFileDelete($event)
+    {
+        $fileAttribute = $event->attribute;
+        $extraAttributes = ArrayHelper::getValue($this->config[$fileAttribute], 'extra', []);
+
+        $this->owner->$fileAttribute = null;
+        foreach ($extraAttributes as $k => $v) {
+            $this->owner->$k = null;
         }
     }
 
 
     public function afterDelete($event)
     {
-        foreach ($this->config as $fileAttr => $config) {
-            $this->unlinkFile($fileAttr);
+        foreach ($this->config as $fileAttribute => $config) {
+            $this->unlinkFile($fileAttribute);
         }
     }
 }
@@ -351,5 +361,5 @@ class FileUploadBehavior extends \yii\base\Behavior
 class FileUploadEvent extends Event
 {
     public $attribute;
-    public $fileInfo;
+    public $fileInfo = [];
 }

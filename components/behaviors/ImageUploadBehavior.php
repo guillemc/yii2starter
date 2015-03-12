@@ -21,15 +21,16 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     /**
      * @var array attribute configuration, indexed by the fields that will hold the uploaded file names.
-     * The values specify related fields or attributes. At least the 'upload' attribute should be specified. Example:
      * [
      *   'my_img' => [
-     *     'upload' => 'myImgUpload', // model attribute that will hold the uploaded file
+     *     'upload' => 'myImgUpload', // model attribute that will hold the uploaded file. This is the only mandatory field.
      *     'remove' => 'myImgRemove', // model attribute (boolean) that will be checked for removing the current file
-     *     'type' => 'my_img_type', // model attribute / table field for storing the file type
-     *     'size' => 'my_img_size', // model attribute / table field for storing the file size
-     *     'w' => 'my_img_width',  // model attribute / table field for storing the image width
-     *     'h' => 'my_img_height',  // model attribute / table field for storing the image height
+     *     'extra' => [
+     *          'my_img_size' => function ($fileInfo) { return $fileInfo['size']; },
+     *          'my_img_type' => function ($fileInfo) { return $fileInfo['type']; },
+     *          'my_img_width' => function ($fileInfo) { return $fileInfo['width']; },
+     *          'my_img_height' => function ($fileInfo) { return $fileInfo['height']; },
+     *      ],
      *   ],
      *   'my_other_img' => ...
      * ]
@@ -81,65 +82,69 @@ class ImageUploadBehavior extends FileUploadBehavior
         return substr($filename, 0, $pos).$suffix.substr($filename, $pos);
     }
 
-    public function getImageName($size = false, $imgAttr = null)
+    public function getImageName($size = false, $imgAttribute = null)
     {
-        if (!$imgAttr) $imgAttr = $this->defaultFileAttribute;
-        $name = $this->owner->$imgAttr;
+        if (!$imgAttribute) $imgAttribute = $this->defaultFileAttribute;
+        $name = $this->owner->$imgAttribute;
         if ($size) {
             $config = $this->resizeConfig;
-            $suffix = ArrayHelper::getValue($config, "{$imgAttr}.{$size}.suffix", "-{$size}");
+            $suffix = ArrayHelper::getValue($config, "{$imgAttribute}.{$size}.suffix", "-{$size}");
             $name = static::addSuffix($name, $suffix);
         }
         return $name;
     }
 
-    public function getImagePath($size = false, $imgAttr = null)
+    public function getImagePath($size = false, $imgAttribute = null)
     {
-        if (!$imgAttr) $imgAttr = $this->defaultFileAttribute;
-        $name = $this->getImageName($size, $imgAttr);
+        if (!$imgAttribute) $imgAttribute = $this->defaultFileAttribute;
+        $name = $this->getImageName($size, $imgAttribute);
         return $this->getBaseFilePath().'/'.$name;
     }
 
-    public function getImageUrl($size = false, $imgAttr = null, $scheme = false)
+    public function getImageUrl($size = false, $imgAttribute = null, $scheme = false)
     {
-        if (!$imgAttr) $imgAttr = $this->defaultFileAttribute;
-        $name = $this->getImageName($size, $imgAttr);
+        if (!$imgAttribute) $imgAttribute = $this->defaultFileAttribute;
+        $name = $this->getImageName($size, $imgAttribute);
         $route = $this->baseUrl.'/'. $this->getDir().'/'.$name;
         return Url::to($route, $scheme);
     }
 
-    public function afterFileSave($event)
+    protected function onFileSaved($fileAttribute, $fileInfo)
     {
-        $attr = $event->attribute;
-        $info = $event->fileInfo;
-
-        if (false === ($imageInfo = getimagesize($info['path']))) {
-            Yii::warning('Not an image: '.$info['path']);
-            return;
+        if (false !== ($a = getimagesize($fileInfo['path']))) {
+            $fileInfo['width'] = $a[0];
+            $fileInfo['height'] = $a[1];
         }
-
-        list($w, $h) = $imageInfo;
-
-        if (null !== ($wAttr = ArrayHelper::getValue($this->config[$attr], 'w'))) {
-            $this->updateAttributes[$wAttr] = $w;
-        }
-        if (null !== ($hAttr = ArrayHelper::getValue($this->config[$attr], 'h'))) {
-            $this->updateAttributes[$hAttr] = $h;
-        }
-
-        $this->createSizes($attr, $info['path']);
-
+        $e = new FileUploadEvent();
+        $e->attribute = $fileAttribute;
+        $e->fileInfo = $fileInfo;
+        $this->owner->trigger(static::EVENT_AFTER_FILE_SAVE, $e);
     }
 
-    public function createSizes($attr, $fromPath = null)
+    public function afterFileSave($event)
     {
-        if (!isset($this->resizeConfig[$attr])) return;
+        parent::afterFileSave($event);
+        $fileAttribute = $event->attribute;
+        $fileInfo = $event->fileInfo;
 
-        if (null === $fromPath) {
-            $fromPath = $this->getFilePath($attr);
+        $w = ArrayHelper::getValue($fileInfo, 'width');
+        $h = ArrayHelper::getValue($fileInfo, 'height');
+        if (!$w || !$h) {
+            Yii::warning('Not an image: '.$fileInfo['path'], __METHOD__);
+            return;
+        }
+        $this->createSizes($fileAttribute, $fileInfo['path']);
+    }
+
+    public function createSizes($fileAttribute, $fromPath = null)
+    {
+        if (!isset($this->resizeConfig[$fileAttribute])) return;
+
+        if (null === $fromPath) { // not called from afterFileSave, but externally
+            $fromPath = $this->getFilePath($fileAttribute);
         }
 
-        foreach ($this->resizeConfig[$attr] as $size => $specs) {
+        foreach ($this->resizeConfig[$fileAttribute] as $size => $specs) {
             $this->createResizedImage($fromPath, $size, $specs);
         }
     }
@@ -173,12 +178,12 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     }
 
-    public function deleteSizes($attr)
+    public function deleteSizes($fileAttribute)
     {
-        if (!isset($this->resizeConfig[$attr])) return;
+        if (!isset($this->resizeConfig[$fileAttribute])) return;
 
-        foreach ($this->resizeConfig[$attr] as $size => $specs) {
-           $path = $this->getImagePath($size, $attr);
+        foreach ($this->resizeConfig[$fileAttribute] as $size => $specs) {
+           $path = $this->getImagePath($size, $fileAttribute);
            if (file_exists($path)) {
                unlink($path);
            }
@@ -187,14 +192,9 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     public function afterFileDelete($event)
     {
-        $attr = $event->attribute;
-        if (null !== ($wAttr = ArrayHelper::getValue($this->config[$attr], 'w'))) {
-            $this->owner->$wAttr = null;
-        }
-        if (null !== ($hAttr = ArrayHelper::getValue($this->config[$attr], 'h'))) {
-            $this->owner->$hAttr = null;
-        }
-        $this->deleteSizes($attr);
+        parent::afterFileDelete($event);
+        $fileAttribute = $event->attribute;
+        $this->deleteSizes($fileAttribute);
     }
 
 }
