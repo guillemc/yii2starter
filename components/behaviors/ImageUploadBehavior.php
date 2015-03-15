@@ -192,9 +192,9 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     public function afterFileDelete($event)
     {
-        parent::afterFileDelete($event);
         $fileAttribute = $event->attribute;
         $this->deleteSizes($fileAttribute);
+        parent::afterFileDelete($event);
     }
 
 }
