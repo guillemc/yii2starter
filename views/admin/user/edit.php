@@ -7,17 +7,14 @@ use yii\bootstrap\ActiveForm;
 /* @var $model app\models\User */
 /* @var $form yii\bootstrap\ActiveForm */
 
-$title = Yii::t('app', 'Users');
+$this->title = Yii::t('app', 'Users');
 $newLabel = Yii::t('admin', 'New', ['g' => 'm']); //gender: 'm' or 'f'
 
 $label = $model->isNewRecord ? $newLabel : $model->getLabel();
 
-$this->title = $title.': '.$label.' | '.Yii::$app->name;
+$this->params['page_subtitle'] = $model->isNewRecord ? '<i class="fa fa-star"></i>&nbsp;'.$label : '<b>'.$model->id.'</b>&nbsp;'.$label;
 
-$this->params['page_title'] = $title;
-$this->params['page_subtitle'] = $model->isNewRecord ? '<i class="fa fa-star"></i>&nbsp;'.$label : '<span class="label label-default">'.$model->id.'</span>&nbsp;'.$label;
-
-$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
 if ($model->isNewRecord) {
     $this->params['breadcrumbs'][] = $newLabel;
 } else {
@@ -29,13 +26,22 @@ echo newerton\fancybox\FancyBox::widget([
 ]);
 ?>
 
-
-<div class="panel panel-default">
-
-<div class="panel-heading">
-    <div class="panel-options">
-        <?= Html::a('<i class="fa fa-star-o"></i>', ['create'], ['title' => $newLabel, 'rel' => 'external']) ?>
+<?php if ($model->hasErrors()): ?>
+    <div class="alert alert-danger">
+    <button data-dismiss="alert" class="close" type="button">×</button>
+    <?= Yii::t('admin', 'Please fix the errors marked in red below.') ?>
     </div>
+<?php elseif (Yii::$app->session->getFlash('data.saved')): ?>
+    <div class="alert alert-success">
+    <button data-dismiss="alert" class="close" type="button">×</button>
+    <?= Yii::t('admin', 'Data successfully saved.') ?>
+    </div>
+<?php endif ?>
+
+<div class="box box-primary">
+
+<div class="box-header">
+    <p class="text-right"><?= Html::a('<i class="fa fa-star-o"></i>', ['create'], ['title' => $newLabel, 'rel' => 'external']) ?></p>
 </div>
 
 <?php $form = ActiveForm::begin([
@@ -56,19 +62,7 @@ echo newerton\fancybox\FancyBox::widget([
     ],
 ]); ?>
 
-<div class="panel-body">
-
-    <?php if ($model->hasErrors()): ?>
-    <div class="alert alert-danger">
-    <button data-dismiss="alert" class="close" type="button">×</button>
-    <?= Yii::t('admin', 'Please fix the errors marked in red below.') ?>
-    </div>
-    <?php elseif (Yii::$app->session->getFlash('data.saved')): ?>
-    <div class="alert alert-success">
-    <button data-dismiss="alert" class="close" type="button">×</button>
-    <?= Yii::t('admin', 'Data successfully saved.') ?>
-    </div>
-    <?php endif ?>
+    <div class="box-body">
 
     <?= $form->field($model, 'id')->textInput() ?>
 
@@ -76,7 +70,7 @@ echo newerton\fancybox\FancyBox::widget([
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => 128]) ?>
 
-    <div class="form-group-separator"></div>
+    <hr>
 
     <?php if (!$model->isNewRecord): ?>
     <div class="form-group">
@@ -90,7 +84,7 @@ echo newerton\fancybox\FancyBox::widget([
 
     <?= $form->field($model, 'passwordRepeat')->textInput(['maxlength' => 128]) ?>
 
-    <div class="form-group-separator"></div>
+    <hr>
 
     <?php if ($model->avatar): ?>
     <div class="form-group">
@@ -102,15 +96,15 @@ echo newerton\fancybox\FancyBox::widget([
     <?php endif ?>
     <?= $form->field($model, 'avatarUpload')->fileInput() ?>
 
+    </div>
 
-
-</div>
-
-<div class="panel-footer">
-    <?= Html::a('<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;'.Yii::t('admin', 'Back'), ['index'], ['class' => 'btn btn-default', 'data-action' => 'back']) ?>
-    <?= Html::submitButton( ($model->isNewRecord ? Yii::t('admin', 'Create') : Yii::t('admin', 'Save')).'&nbsp;<i class="fa fa-check"></i>', ['class' => 'btn btn-success']) ?>
-    <?= Html::submitButton( ($model->isNewRecord ? Yii::t('admin', 'Create and return') : Yii::t('admin', 'Save and return')).'&nbsp;<i class="fa fa-check"></i>', ['class' => 'btn btn-success', 'onclick' => "this.form['continue'].value='0'; return true;"]) ?>
-    <input type="hidden" name="continue" value="1" /></div>
-
-<?php ActiveForm::end(); ?>
+    <div class="box-footer">
+        <div class="row"><div class="col-sm-10 col-sm-offset-2">
+        <?= Html::a('<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;'.Yii::t('admin', 'Back'), ['index'], ['class' => 'btn btn-default', 'data-action' => 'back']) ?>
+        <?= Html::submitButton( ($model->isNewRecord ? Yii::t('admin', 'Create') : Yii::t('admin', 'Save')).'&nbsp;<i class="fa fa-check"></i>', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton( ($model->isNewRecord ? Yii::t('admin', 'Create and return') : Yii::t('admin', 'Save and return')).'&nbsp;<i class="fa fa-check"></i>', ['class' => 'btn btn-success', 'onclick' => "this.form['continue'].value='0'; return true;"]) ?>
+        <input type="hidden" name="continue" value="1" />
+        </div></div>
+    </div>
+    <?php ActiveForm::end(); ?>
 </div>

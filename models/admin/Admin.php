@@ -216,9 +216,9 @@ class Admin extends ActiveRecord implements IdentityInterface
     public function getAvatar()
     {
         if (trim($this->email) == '') {
-            return Yii::getAlias('@web/images/user-40.png');
+            return Yii::getAlias('@web/images/user-128.png');
         }
-        return 'http://www.gravatar.com/avatar/' . md5($this->email) . '?s=32';
+        return 'http://www.gravatar.com/avatar/' . md5($this->email) . '?s=90';
     }
 
     public function getLabel()

@@ -105,6 +105,9 @@ $config = [
                 ],
             ],
         ],
+        'view' => [
+            'params' => ['bodyClass' => ['fixed', 'skin-blue']],
+        ],
     ],
     'params' => array_merge([
         'admin.root' => 1, //root user id from admin table
@@ -138,7 +141,7 @@ if (YII_ENV_DEV) {
             'customCrud' => [
                 'class' => 'app\gii\crud\Generator',
                 'templates' => [
-                    'default' => '@app/gii/crud/xenon',
+                    'default' => '@app/gii/crud/adminlte',
                 ]
             ],
             'customModel' => [

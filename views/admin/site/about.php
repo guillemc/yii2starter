@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-$this->title = Yii::t('admin', 'Debug info').' | '.Yii::$app->name;;
+$this->title = Yii::t('admin', 'Debug info');
 
 $this->params['page_subtitle'] = 'PHP environment variables';
 //$this->params['breadcrumbs'][] = $this->title;

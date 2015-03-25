@@ -7,7 +7,7 @@ use yii\widgets\Breadcrumbs;
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-app\assets\XenonAsset::register($this);
+app\assets\AdminLteAsset::register($this);
 
 ?>
 <?php $this->beginPage() ?>
@@ -26,7 +26,7 @@ app\assets\XenonAsset::register($this);
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
-<body class="page-body <?php if (isset($this->params['bodyClass'])) echo $this->params['bodyClass'] ?>">
+<body class="<?= is_array($this->params['bodyClass']) ? implode(' ', $this->params['bodyClass']) : $this->params['bodyClass'] ?>">
 <?php $this->beginBody() ?>
 
             <?= $content ?>

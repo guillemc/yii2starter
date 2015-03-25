@@ -6,22 +6,19 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\admin\Admin */
 
-$title = Yii::t('admin', 'Administrators');
+$this->title = Yii::t('admin', 'Administrators');
 
 $label = $model->getLabel();
 
-$this->title = $title.': '.$label.' | '.Yii::$app->name;
+$this->params['page_subtitle'] = '<b>'.$model->id.'</b> '.$label;
 
-$this->params['page_title'] = $title;
-$this->params['page_subtitle'] = '<span class="label label-default">'.$model->id.'</span> '.$label;
-
-$this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['index']];
 $this->params['breadcrumbs'][] = '<b>'.$label.'</b>';
 ?>
 
-<div class="panel panel-default">
+<div class="box box-primary">
 
-<div class="panel-body">
+<div class="box-body">
 
 
 <?= DetailView::widget([
@@ -38,7 +35,7 @@ $this->params['breadcrumbs'][] = '<b>'.$label.'</b>';
 
 </div>
 
-<div class="panel-footer">
+<div class="box-footer">
     <?= Html::a('<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;'.Yii::t('admin', 'Back'), ['index'], ['class' => 'btn btn-default', 'data-action' => 'back']) ?>
     <?= Html::a(Yii::t('admin', 'Edit').'&nbsp;<span class="glyphicon glyphicon-pencil"></span>', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
     <?= Html::a(Yii::t('admin', 'Delete').'&nbsp;<span class="glyphicon glyphicon-trash"></span>', ['delete', 'id' => $model->id], [

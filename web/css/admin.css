@@ -4,29 +4,6 @@
  *
 */
 
-.login-page .login-form .login-header .logo span {  
-  font-size: 26px;
-  padding: 0;
-}
-
-.logo-env .logo a {
-    color: white;
-    text-decoration: none;    
-}
-
-.logo-env .logo a.logo-collapsed {
-    font-size: 16px;
-}
-
-.logo-env .logo a.logo-expanded {
-    font-size: 22px;
-}
-
-.user-info-menu > li {
-    min-height: 78px;
-}
-
-
 .not-set {
     color: #c55;
     font-style: italic;
