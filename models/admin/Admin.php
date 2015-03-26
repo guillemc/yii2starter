@@ -18,6 +18,7 @@ use yii\web\IdentityInterface;
  * @property string $auth_key
  * @property integer $created_at
  * @property integer $updated_at
+ * @property integer $last_login
  * @property string $password write-only password
  */
 class Admin extends ActiveRecord implements IdentityInterface
@@ -72,6 +73,7 @@ class Admin extends ActiveRecord implements IdentityInterface
             'email' => Yii::t('admin', 'Email'),
             'pwd' => Yii::t('admin', 'Password'),
             'password' => Yii::t('admin', 'Password'),
+            'last_login' => Yii::t('admin', 'Last login'),
         ];
     }
 
@@ -205,13 +207,11 @@ class Admin extends ActiveRecord implements IdentityInterface
         $this->pwd_reset_token = null;
     }
 
-    /*
     public static function afterLogin($event)
     {
         $model = $event->identity;
-
+        $model->updateAttributes(['last_login' => time()]);
     }
-    */
 
     public function getAvatar()
     {

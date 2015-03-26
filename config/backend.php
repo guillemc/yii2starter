@@ -31,7 +31,7 @@ $config = [
                 'name' => '_identity-back-'.APP_ID,
                 'httpOnly' => true,
             ],
-            //'on afterLogin' => ['app\models\admin\Admin', 'afterLogin'],
+            'on afterLogin' => ['app\models\admin\Admin', 'afterLogin'],
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
