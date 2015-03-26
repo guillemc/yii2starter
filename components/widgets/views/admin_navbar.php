@@ -26,13 +26,13 @@
       </li>
       <?php endif ?>
 
-      <?php if (Yii::$app->user->identity->isRoot()): ?>
+      <?php if (!$user->isGuest && $user->identity->isRoot()): ?>
       <li>
         <a href="<?= Url::toRoute(['admin/index']) ?>"><i class="fa fa-users"></i>&nbsp;<?= Yii::t('admin', 'Administrators') ?></a>
       </li>
       <?php endif ?>
 
-      <?php if (!Yii::$app->user->isGuest): $avatar = Yii::$app->user->identity->getAvatar(); $username = Html::encode(Yii::$app->user->identity->username); ?>
+      <?php if (!$user->isGuest): $avatar = $user->identity->getAvatar(); $username = Html::encode($user->identity->username); ?>
       <li class="dropdown user user-menu">
         <!-- Menu Toggle Button -->
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -47,7 +47,7 @@
             <img src="<?= $avatar ?>" class="img-circle" alt="<?= $username ?>" />
             <p>
               <?= $username ?>
-              <?php //<small>Last login: </small> ?>
+              <small><?= Yii::t('admin', 'Last login') ?>: <?= Yii::$app->formatter->format($user->identity->last_login, 'datetime') ?></small>
             </p>
           </li>
           <!-- Menu Footer-->

@@ -10,6 +10,7 @@ class AdminNavbar extends Widget
     public $languages = array();
     public $currentLanguage = array();
     public $otherLanguages = array();
+    public $user;
 
     public function init()
     {
@@ -23,11 +24,12 @@ class AdminNavbar extends Widget
             $this->otherLanguages = $this->languages;
             unset($this->otherLanguages[$lang]);
         }
+        $this->user = Yii::$app->user;
 
     }
 
     public function run()
     {
-        return $this->render('admin_navbar');
+        return $this->render('admin_navbar', ['user' => $this->user]);
     }
 }
