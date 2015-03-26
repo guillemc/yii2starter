@@ -11,7 +11,7 @@ two apps share the same webroot, and are accessed using different entry scripts.
 
 The template contains basic backend functionality such as password reset, administrator and user management.
 
-The backend is built upon the [xenon admin theme](http://xenontheme.com/) (not included).
+The backend is built upon the [AdminLTE theme](https://almsaeedstudio.com/AdminLTE).
 
 DIRECTORY STRUCTURE
 -------------------
