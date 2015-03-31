@@ -69,20 +69,20 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
 
     /* public function beforeSave($insert)
     {
-        if (parent::beforeSave($insert)) {
-            // custom code here...
-            return true;
+        if (!parent::beforeSave($insert)) {
+            return false;
         }
-        return false;
+        // custom code here...
+        return true;
     } */
 
     /* public function beforeDelete()
     {
-        if (parent::beforeDelete()) {
-            // ...custom code here...
-            return true;
+        if (!parent::beforeDelete()) {
+            return false;
         }
-        return false;
+        // ...custom code here...
+        return true;
     } */
 
     /**
