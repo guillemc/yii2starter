@@ -19,7 +19,7 @@
 return [
     'No' => 'No',
     'Yes' => 'Sí',
-    'Add new' => 'Añadir {g, select, m{nuevo} f{nueva}}',
+    'Add new' => 'Añadir {g, select, f{nueva} other{nuevo}}',
     'Administrators' => 'Administradores',
     'An email has been sent to {email} with further instructions.' => 'Se ha enviado un email a {email} con instrucciones.',
     'Are you sure you want to delete this item?' => '¿Está seguro que desea eliminar este elemento?',
