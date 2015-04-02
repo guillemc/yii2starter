@@ -48,7 +48,7 @@ return [
     'Login' => 'Entrar',
     'Logout' => 'Salir',
     'Missing password reset token.' => 'Falta el parámetro de restablecimiento de contraseña.',
-    'New' => '{g, select, m{Nuevo} f{Nueva}}',
+    'New' => '{g, select, f{Nueva} m{Nuevo}}',
     'No matching user found.' => 'No se ha encontrado ningún usuario que coincida.',
     'Password' => 'Contraseña',
     'Password reset' => 'Restablecer contraseña',
