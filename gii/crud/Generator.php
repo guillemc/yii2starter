@@ -32,6 +32,7 @@ use yii\web\Controller;
 class Generator extends \yii\gii\generators\crud\Generator
 {
     public $saveAndReturn;
+    public $saveMultiple;
 
     public $tsColumns = ['created_at', 'updated_at', 'created', 'updated'];
     public $nameColumns = ['name', 'title', 'username', 'firstname', 'lastname'];
@@ -59,7 +60,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function rules()
     {
         return array_merge(parent::rules(), [
-            [['saveAndReturn'], 'boolean'],
+            [['saveAndReturn', 'saveMultiple'], 'boolean'],
         ]);
     }
 
@@ -70,6 +71,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     {
         return array_merge(parent::attributeLabels(), [
             'saveAndReturn' => 'Implement "Save" / "Save and return"',
+            'saveMultiple' => 'Save related models',
         ]);
     }
 
@@ -81,6 +83,7 @@ class Generator extends \yii\gii\generators\crud\Generator
         return array_merge(parent::hints(), [
             'saveAndReturn' => 'If checked, will place two buttons on the create/update forms: '
             . '"Save" (saves and continue editing) and "Save and return" (returns to list after saving)',
+            'saveMultiple' => 'If checked, will generate skeleton code for validating and saving related models as well as the main model',
         ]);
     }
 
@@ -89,7 +92,7 @@ class Generator extends \yii\gii\generators\crud\Generator
      */
     public function stickyAttributes()
     {
-        return array_merge(parent::stickyAttributes(), ['saveAndReturn']);
+        return array_merge(parent::stickyAttributes(), ['saveAndReturn', 'saveMultiple']);
     }
 
     public function getGridColumnSpec($column)

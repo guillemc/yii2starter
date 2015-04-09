@@ -99,15 +99,42 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         ]);
     }
 
-    /**
+    <?php if ($generator->saveMultiple): ?>/**
      * Creates a new <?= $modelClass ?> model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
         $model = new <?= $modelClass ?>();
+        $related = $model->getRelatedModels();
 
+        $params = Yii::$app->request->post();
+        if ($model->load($params)) {
+            Model::loadMultiple($related, $params);
+            $isValid = $model->validate();
+            $isValid = Model::validateMultiple($related) && $isValid;
+            if ($isValid) {
+                $model->save(false);
+                foreach ($related as $rel) {
+                    $rel->link('mainModel', $model);
+                }
+                Yii::$app->session->setFlash('data.saved', $model->getLabel());
+                <?php if ($generator->saveAndReturn): ?>if (Yii::$app->request->post('continue')) {
+                    return $this->redirect(['update', 'id' => $model->id]);
+                }<?php endif ?>
+            }
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('edit', compact('model', 'related'));
+    }
+<?php else: ?>/**
+     * Creates a new <?= $modelClass ?> model.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new <?= $modelClass ?>();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash('data.saved', $model->getLabel());
             <?php if ($generator->saveAndReturn): ?>if (Yii::$app->request->post('continue')) {
@@ -119,10 +146,40 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
         return $this->render('edit', compact('model'));
     }
+<?php endif ?>
 
-    /**
+    <?php if ($generator->saveMultiple): ?>/**
      * Updates an existing <?= $modelClass ?> model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
+     * @return mixed
+     */
+    public function actionUpdate(<?= $actionParams ?>)
+    {
+        $model = $this->findModel(<?= $actionParams ?>);
+        $related = $model->getRelatedModels();
+
+        $params = Yii::$app->request->post();
+        if ($model->load($params)) {
+            Model::loadMultiple($related, $params);
+            $isValid = $model->validate();
+            $isValid = Model::validateMultiple($related) && $isValid;
+            if ($isValid) {
+                $model->save(false);
+                foreach ($related as $rel) {
+                    $rel->link('mainModel', $model);
+                }
+                Yii::$app->session->setFlash('data.saved', $model->getLabel());
+                <?php if ($generator->saveAndReturn): ?>if (Yii::$app->request->post('continue')) {
+                    return $this->refresh();
+                }<?php endif ?>
+            }
+            return $this->redirect(['index']);
+        }
+
+        return $this->render('edit', compact('model', 'related'));
+    }
+<?php else: ?>/**
+     * Updates an existing <?= $modelClass ?> model.
      * <?= implode("\n     * ", $actionParamComments) . "\n" ?>
      * @return mixed
      */
@@ -141,6 +198,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
         return $this->render('edit', compact('model'));
     }
+<?php endif ?>
 
     /**
      * Deletes an existing <?= $modelClass ?> model.

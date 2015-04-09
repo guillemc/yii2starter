@@ -16,3 +16,4 @@ echo $form->field($generator, 'enableI18N')->checkbox();
 echo $form->field($generator, 'messageCategory');
 
 echo $form->field($generator, 'saveAndReturn')->checkbox();
+echo $form->field($generator, 'saveMultiple')->checkbox();
