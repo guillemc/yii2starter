@@ -92,7 +92,7 @@ class FileUploadBehavior extends \yii\base\Behavior
         parent::attach($owner);
 
         if (!isset($this->dirName)) {
-            throw new CException('Missing dirName attribute.');
+            throw new Exception('Missing dirName attribute.');
         }
 
         foreach ($this->config as $fileAttribute => $config) {
