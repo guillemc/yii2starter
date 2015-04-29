@@ -53,7 +53,7 @@ $this->beginBlock('buttons');
         'columns' => [
             ['attribute' => 'id', 'headerOptions' => ['class' => 'sort-numerical']],
             ['attribute' => 'username', 'format' => 'raw', 'value' => function ($model) {
-                return Html::a($model->username, ['update', 'id' => $model->id]);
+                return Html::a($model->username, ['update', 'id' => $model->id], ['data-pjax' => 0]);
             }],
             'email:email',
             // 'created_at',

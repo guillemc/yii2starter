@@ -65,9 +65,9 @@ $this->beginBlock('buttons');
                 'attribute' => 'username',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return Html::a($model->username, ['update', 'id' => $model->id]);
+                    return Html::a($model->username, ['update', 'id' => $model->id], ['data-pjax' => 0]);
                 },
-            ],            
+            ],
             'email:email',
             'avatar',
             [
@@ -96,4 +96,4 @@ $this->beginBlock('buttons');
 </div>
 
 <?php \yii\widgets\Pjax::end() ?>
-</div> 
+</div>
