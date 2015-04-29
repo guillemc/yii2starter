@@ -110,7 +110,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
         'dataProvider' => $dataProvider,
         'itemOptions' => ['class' => 'item'],
         'itemView' => function ($model, $key, $index, $widget) {
-            return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>]);
+            return Html::a(Html::encode($model-><?= $nameAttribute ?>), ['view', <?= $urlParams ?>], ['data-pjax' => 0]);
         },
     ]) ?>
 <?php endif; ?>
