@@ -85,33 +85,45 @@ class Generator extends \yii\gii\generators\model\Generator
         return array_merge(parent::stickyAttributes(), ['labelField', 'timestampFields']);
     }
 
-    /**
-     * @inheritdoc
-     */
     public function generate()
     {
         $files = [];
         $relations = $this->generateRelations();
         $db = $this->getDbConnection();
         foreach ($this->getTableNames() as $tableName) {
-            $className = $this->generateClassName($tableName);
+            // model :
+            $modelClassName = $this->generateClassName($tableName);
+            $queryClassName = ($this->generateQuery) ? $this->generateQueryClassName($modelClassName) : false;
             $tableSchema = $db->getTableSchema($tableName);
             $params = [
                 'tableName' => $tableName,
-                'className' => $className,
+                'className' => $modelClassName,
+                'queryClassName' => $queryClassName,
                 'tableSchema' => $tableSchema,
                 'labels' => $this->generateLabels($tableSchema),
                 'rules' => $this->generateRules($tableSchema),
-                'relations' => isset($relations[$className]) ? $relations[$className] : [],
+                'relations' => isset($relations[$tableName]) ? $relations[$tableName] : [],
 
                 //begin custom code
                 'labelField' => $this->getLabelField($tableSchema),
                 //end custom code
             ];
             $files[] = new CodeFile(
-                Yii::getAlias('@' . str_replace('\\', '/', $this->ns)) . '/' . $className . '.php',
+                Yii::getAlias('@' . str_replace('\\', '/', $this->ns)) . '/' . $modelClassName . '.php',
                 $this->render('model.php', $params)
             );
+
+            // query :
+            if ($queryClassName) {
+                $params = [
+                    'className' => $queryClassName,
+                    'modelClassName' => $modelClassName,
+                ];
+                $files[] = new CodeFile(
+                    Yii::getAlias('@' . str_replace('\\', '/', $this->queryNs)) . '/' . $queryClassName . '.php',
+                    $this->render('query.php', $params)
+                );
+            }
         }
 
         return $files;
@@ -159,9 +171,13 @@ class Generator extends \yii\gii\generators\model\Generator
     {
         $labels = parent::generateLabels($table);
         array_walk($labels, function (&$value) {
+            if (substr_compare($value, ' id', -3, 3, true) === 0) {
+                $value = substr($value, 0, -3); // remove ID
+            }
             $value = ucfirst(strtolower($value));
         });
         return $labels;
     }
 
 }
+
