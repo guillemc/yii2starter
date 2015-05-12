@@ -44,12 +44,12 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     }
 } else {
     foreach ($generator->getTableSchema()->columns as $column) {
-        $spec = $generator->getDetailColumnSpec($column);
+        $format = $generator->generateColumnFormat($column);
+        $spec = $generator->getDetailColumnSpec($column, $format);
         if ($spec) {
             echo "            " . $spec . "\n";
             continue;
         }
-        $format = $generator->generateColumnFormat($column);
         echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
     }
 }
@@ -71,3 +71,4 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 </div>
 
 </div>
+

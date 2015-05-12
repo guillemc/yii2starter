@@ -66,12 +66,12 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 } else {
     foreach ($tableSchema->columns as $column) {
         if ($column->name == 'id') continue;
-        $spec = $generator->getGridColumnSpec($column);
+        $format = $generator->generateColumnFormat($column);
+        $spec = $generator->getGridColumnSpec($column, $format);
         if ($spec) {
             echo '            '.$spec."\n";
             continue;
         }
-        $format = $generator->generateColumnFormat($column);
         if (++$count < 6) {
             echo "            '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
         } else {
@@ -80,7 +80,6 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
     }
 }
 ?>
-
             ['class' => 'yii\grid\ActionColumn', 'contentOptions' => ['class' => 'text-center']],
         ],
     ]); ?>
@@ -102,3 +101,4 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 
 <?= '<?php ' ?>\yii\widgets\Pjax::end() ?>
 </div>
+

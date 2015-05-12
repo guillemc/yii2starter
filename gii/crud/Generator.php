@@ -95,7 +95,7 @@ class Generator extends \yii\gii\generators\crud\Generator
         return array_merge(parent::stickyAttributes(), ['saveAndReturn', 'saveMultiple']);
     }
 
-    public function getGridColumnSpec($column)
+    public function getGridColumnSpec($column, $format)
     {
         if (in_array($column->name, $this->nameColumns)) {
             return <<<EOT
@@ -131,12 +131,16 @@ EOT;
             ],
 EOT;
         }
+        return <<<EOT
+[
+                'attribute' => '{$column->name}',
+                'format' => '{$format}',
+            ],
+EOT;
 
-
-        return false;
     }
 
-    public function getDetailColumnSpec($column)
+    public function getDetailColumnSpec($column, $format)
     {
 
         if (in_array($column->name, $this->tsColumns)) {
@@ -145,9 +149,12 @@ EOT;
         if ($this->isBoolean($column)) {
             return "'{$column->name}:boolean',";
         }
-
-
-        return false;
+        return <<<EOT
+[
+                'attribute' => '{$column->name}',
+                'format' => '{$format}',
+            ],
+EOT;
     }
 
 
@@ -172,3 +179,4 @@ EOT;
         return parent::generateActiveField($attribute);
     }
 }
+
