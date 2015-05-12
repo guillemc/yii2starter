@@ -40,7 +40,7 @@ if ($model->isNewRecord) {
 
 ?>
 
-<?= '<?php ' ?>if ($model->hasErrors()): ?>
+<?= '<?php ' ?>if (<?= $generator->saveMultiple ? '$hasError' : '$model->hasErrors()' ?>): ?>
 <div class="alert alert-danger">
 <button data-dismiss="alert" class="close" type="button">×</button>
 <?= '<?= ' ?>Yii::t('admin', 'Please fix the errors marked in red below.') ?>
@@ -96,3 +96,4 @@ if ($model->isNewRecord) {
 
 <?= '<?php ' ?>ActiveForm::end(); ?>
 </div>
+

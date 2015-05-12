@@ -108,6 +108,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = new <?= $modelClass ?>();
         $related = $model->getRelatedModels();
 
+        $hasError = false;
         $params = Yii::$app->request->post();
         if ($model->load($params)) {
             Model::loadMultiple($related, $params);
@@ -125,9 +126,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
                 return $this->redirect(['index']);
             }
+            $hasError = true;
         }
 
-        return $this->render('edit', compact('model', 'related'));
+        return $this->render('edit', compact('model', 'hasError', 'related'));
     }
 <?php else: ?>/**
      * Creates a new <?= $modelClass ?> model.
@@ -159,6 +161,7 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $model = $this->findModel(<?= $actionParams ?>);
         $related = $model->getRelatedModels();
 
+        $hasError = false;
         $params = Yii::$app->request->post();
         if ($model->load($params)) {
             Model::loadMultiple($related, $params);
@@ -176,9 +179,10 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
 
                 return $this->redirect(['index']);
             }
+            $hasError = true;
         }
 
-        return $this->render('edit', compact('model', 'related'));
+        return $this->render('edit', compact('model', 'hasError', 'related'));
     }
 <?php else: ?>/**
      * Updates an existing <?= $modelClass ?> model.
