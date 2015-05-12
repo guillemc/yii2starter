@@ -122,8 +122,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 <?php if ($generator->saveAndReturn): ?>if (Yii::$app->request->post('continue')) {
                     return $this->redirect(['update', 'id' => $model->id]);
                 }<?php endif ?>
+
+                return $this->redirect(['index']);
             }
-            return $this->redirect(['index']);
         }
 
         return $this->render('edit', compact('model', 'related'));
@@ -172,8 +173,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 <?php if ($generator->saveAndReturn): ?>if (Yii::$app->request->post('continue')) {
                     return $this->refresh();
                 }<?php endif ?>
+
+                return $this->redirect(['index']);
             }
-            return $this->redirect(['index']);
         }
 
         return $this->render('edit', compact('model', 'related'));
@@ -240,3 +242,4 @@ if (count($pks) === 1) {
         }
     }
 }
+
