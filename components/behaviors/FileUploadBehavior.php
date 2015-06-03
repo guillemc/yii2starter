@@ -225,8 +225,13 @@ class FileUploadBehavior extends \yii\base\Behavior
         $fileInfo = [];
         if ($file instanceof UploadedFile && !$file->getHasError()) {
             $fileInfo = $this->saveUploadedFile($file, $fileAttribute);
-        } elseif (is_string($file)) { // is it a path?
-            $fileInfo = $this->saveFileFromPath($file, $fileAttribute);
+        } elseif (is_string($file)) {
+            if ($url = filter_var($file, FILTER_VALIDATE_URL)) {
+                $fileInfo = $this->saveFileFromUrl($url, $fileAttribute);
+            } else {
+                // is it a path?
+                $fileInfo = $this->saveFileFromPath($file, $fileAttribute);
+            }
         }
         if ($fileInfo) {
             $this->onFileSaved($fileAttribute, $fileInfo);
@@ -273,6 +278,23 @@ class FileUploadBehavior extends \yii\base\Behavior
             'path' => $destPath,
             'name' => $name,
             'original_name' => basename($path),
+            'size' => filesize($destPath),
+            'type' => FileHelper::getMimeType($destPath),
+        ];
+    }
+
+    protected function saveFileFromUrl($url, $fileAttribute)
+    {
+        $name = $this->makeFileName(basename($url), $fileAttribute);
+        $destPath = $this->getBaseFilePath().'/'.$name;
+
+        $success = @copy($url, $destPath);
+        if (!$success) return null;
+
+        return [
+            'path' => $destPath,
+            'name' => $name,
+            'original_name' => basename($url),
             'size' => filesize($destPath),
             'type' => FileHelper::getMimeType($destPath),
         ];
