@@ -53,8 +53,8 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 You can then install this application template using the following command:
 
 ~~~
-php composer.phar global require "fxp/composer-asset-plugin:1.0.0"
-php composer.phar create-project --prefer-dist --stability=dev guillemc/yii2starter myapp
+composer global require "fxp/composer-asset-plugin:~1.0.0"
+composer create-project --prefer-dist --stability=dev guillemc/yii2starter myapp
 ~~~
 
 

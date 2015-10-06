@@ -106,7 +106,7 @@ $config = [
             ],
         ],
         'view' => [
-            'params' => ['bodyClass' => ['fixed', 'skin-blue']],
+            'params' => ['bodyClass' => ['skin-blue']],
         ],
     ],
     'params' => array_merge([
