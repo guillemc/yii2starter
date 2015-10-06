@@ -64,7 +64,25 @@ $this->beginBlock('buttons');
                 'contentOptions' => ['class' => 'text-center'],
             ],
 
-            ['class' => 'yii\grid\ActionColumn', 'contentOptions' => ['class' => 'text-center']],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'contentOptions' => ['class' => 'text-center'],
+                'template' => '{view} {update} {delete}',
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        return Html::a('<span class="label label-primary"><i class="fa fa-eye"></i></span>', $url, ['data-pjax' => '0', 'title' => Yii::t('admin', 'View')]);
+                    },
+                    'update' => function ($url, $model, $key) {
+                        return Html::a('<span class="label label-warning"><i class="fa fa-pencil"></i></span>', $url, ['data-pjax' => '0', 'title' => Yii::t('admin', 'Edit')]);
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a('<span class="label label-danger"><i class="fa fa-trash"></i></span>', $url, ['data-pjax' => '0', 'title' => Yii::t('admin', 'Delete'),
+                            'data-method' => 'post',
+                            'data-confirm' => Yii::t('admin', 'Are you sure you want to delete this user?'),
+                        ]);
+                    },
+                ],
+            ],
         ],
     ]); ?>
 
