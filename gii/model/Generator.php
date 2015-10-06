@@ -112,18 +112,6 @@ class Generator extends \yii\gii\generators\model\Generator
                 Yii::getAlias('@' . str_replace('\\', '/', $this->ns)) . '/' . $modelClassName . '.php',
                 $this->render('model.php', $params)
             );
-
-            // query :
-            if ($queryClassName) {
-                $params = [
-                    'className' => $queryClassName,
-                    'modelClassName' => $modelClassName,
-                ];
-                $files[] = new CodeFile(
-                    Yii::getAlias('@' . str_replace('\\', '/', $this->queryNs)) . '/' . $queryClassName . '.php',
-                    $this->render('query.php', $params)
-                );
-            }
         }
 
         return $files;
@@ -143,15 +131,26 @@ class Generator extends \yii\gii\generators\model\Generator
     public function generateRules($tableSchema)
     {
         $ts = $this->getTimestampFields($tableSchema);
+        $table = $tableSchema;
         if ($ts) {
             $table = clone $tableSchema;
             foreach ($ts as $field) {
                 unset($table->columns[$field]);
             }
-            return parent::generateRules($table);
         }
-        return parent::generateRules($tableSchema);
+        $rules = parent::generateRules($table);
 
+        $nulls = [];
+        foreach ($table->columns as $column) {
+            if ($column->allowNull && $column->defaultValue === null) {
+                $nulls[] = $column->name;
+            }
+        }
+        if ($nulls) {
+            array_unshift($rules, "[['" . implode("', '", $nulls) . "'], 'trim']");
+            $rules[] = "[['" . implode("', '", $nulls) . "'], 'default', 'value' => null]";
+        }
+        return $rules;
     }
 
     public function getTimestampFields($table)

@@ -114,4 +114,24 @@ class <?= $className ?> extends <?= '\\' . ltrim($generator->baseClass, '\\') . 
         return $this-><?= $labelField ?>;
     }
 <?php endif ?>
+
+<?php if ($queryClassName): ?>
+    public static function find()
+    {
+        return new <?= $queryClassName ?>(get_called_class());
+    }
+<?php endif ?>
 }
+<?php if ($queryClassName): ?>
+
+class <?= $queryClassName ?> extends \yii\db\ActiveQuery
+{
+
+    /*
+    public function active()
+    {
+        return $this->andWhere(['status' => 1]);
+    }
+    */
+}
+<?php endif ?>
