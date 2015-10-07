@@ -1,5 +1,5 @@
 <?php
-
+Yii::setAlias('@webroot', dirname(__DIR__) . '/web');
 Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 
 $params = require(__DIR__ . '/params.php');
