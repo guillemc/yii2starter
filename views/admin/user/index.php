@@ -66,7 +66,7 @@ $this->beginBlock('buttons');
 
             [
                 'class' => 'yii\grid\ActionColumn',
-                'contentOptions' => ['class' => 'text-center'],
+                'contentOptions' => ['class' => 'text-center buttons'],
                 'template' => '{view} {update} {delete}',
                 'buttons' => [
                     'view' => function ($url, $model, $key) {
