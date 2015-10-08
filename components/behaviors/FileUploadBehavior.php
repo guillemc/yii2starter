@@ -285,11 +285,14 @@ class FileUploadBehavior extends \yii\base\Behavior
 
     protected function saveFileFromUrl($url, $fileAttribute)
     {
-        $name = $this->makeFileName(basename($url), $fileAttribute);
+        $name = $this->makeFileName(parse_url($url, PHP_URL_PATH), $fileAttribute);
         $destPath = $this->getBaseFilePath().'/'.$name;
 
         $success = @copy($url, $destPath);
-        if (!$success) return null;
+        if (!$success) {
+            Yii::error("Could not copy $url to $destPath", __METHOD__);
+            return null;
+        }
 
         return [
             'path' => $destPath,
@@ -309,8 +312,8 @@ class FileUploadBehavior extends \yii\base\Behavior
         $pi['extension'];  // => php
         $pi['filename'];   // => lib.inc (since PHP 5.2.0) */
 
-        $ext = strtolower($pi['extension']);
-        $fileName = Inflector::slug($pi['filename']).'.'.$ext;
+        $ext = isset($pi['extension']) ? '.'.strtolower($pi['extension']) : '';
+        $fileName = Inflector::slug($pi['filename']).$ext;
         if ($this->fileNameCallback) {
             $func = $this->fileNameCallback;
             $fileName = trim($func($this->owner, $fileName, $ext, $fileAttribute), '/');
