@@ -70,12 +70,14 @@ $config = [
                         'yii\web\HttpException:*',
                     ],*/
                     'except' => YII_DEBUG ? [] : ['yii\web\HttpException:404',],
+                    'logVars' => [],
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
                     'logFile' => '@runtime/logs/backend-info.log',
                     'levels' => ['info'],
                     'categories' => [ 'app\*'],
+                    'logVars' => [],
                 ],
             ],
         ],

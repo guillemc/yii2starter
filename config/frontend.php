@@ -65,12 +65,14 @@ $config = [
                         'yii\web\HttpException:*',
                     ],*/
                     'except' => YII_DEBUG ? [] : ['yii\web\HttpException:404',],
+                    'logVars' => [],
                 ],
                 [
                     'class' => 'yii\log\FileTarget',
                     'logFile' => '@runtime/logs/frontend-info.log',
                     'levels' => ['info'],
                     'categories' => [ 'app\*'],
+                    'logVars' => [],
                 ],
             ],
         ],
@@ -97,8 +99,8 @@ $config = [
             ],
         ],
     ],
-    'params' => array_merge([        
-        'user.token_expire' => 3600,        
+    'params' => array_merge([
+        'user.token_expire' => 3600,
     ], $params),
 ];
 

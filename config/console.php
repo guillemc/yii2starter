@@ -1,4 +1,5 @@
 <?php
+
 Yii::setAlias('@webroot', dirname(__DIR__) . '/web');
 Yii::setAlias('@tests', dirname(__DIR__) . '/tests');
 
@@ -20,8 +21,17 @@ return [
         'log' => [
             'targets' => [
                 [
+                    'logFile' => '@runtime/logs/console.log',
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
+                    'logVars' => [],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'logFile' => '@runtime/logs/console-info.log',
+                    'levels' => ['info'],
+                    'categories' => [ 'app\*'],
+                    'logVars' => [],
                 ],
             ],
         ],
