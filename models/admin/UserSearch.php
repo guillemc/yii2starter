@@ -18,8 +18,9 @@ class UserSearch extends User
     public function rules()
     {
         return [
+            [['avatar'], 'trim'],
             [['id', 'created_at', 'updated_at'], 'integer'],
-            [['username', 'auth_key', 'pwd', 'pwd_reset_token', 'email', 'avatar'], 'safe'],
+            [['username', 'auth_key', 'pwd', 'pwd_reset_token', 'email'], 'safe'],
         ];
     }
 
@@ -79,8 +80,11 @@ class UserSearch extends User
             ->andFilterWhere(['like', 'auth_key', $this->auth_key])
             ->andFilterWhere(['like', 'pwd', $this->pwd])
             ->andFilterWhere(['like', 'pwd_reset_token', $this->pwd_reset_token])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'avatar', $this->avatar]);
+            ->andFilterWhere(['like', 'email', $this->email]);
+
+        if ('' != $this->avatar) {
+            $query->andWhere($this->avatar ? 'avatar IS NOT NULL' : 'avatar IS NULL');
+        }
 
         return $dataProvider;
     }

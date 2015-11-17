@@ -42,14 +42,28 @@ $this->beginBlock('buttons');
             //['class' => 'yii\grid\SerialColumn'],
             ['attribute' => 'id', 'headerOptions' => ['class' => 'sort-numerical']],
             [
+                'attribute' => 'avatar',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return $model->avatar ? Html::img($model->getImageUrl('thumb', 'avatar'), ['alt' => 'avatar', 'width' => 50]) : null;
+                },
+                'filter' => ['1' => Yii::t('admin', 'Yes'), '0' => Yii::t('admin', 'No')],
+                'contentOptions' => ['class' => 'text-center'],
+            ],
+            [
                 'attribute' => 'username',
                 'format' => 'raw',
                 'value' => function ($model) {
                     return Html::a($model->username, ['update', 'id' => $model->id], ['data-pjax' => 0]);
                 },
             ],
-            'email:email',
-            'avatar',
+            [
+                'attribute' => 'email',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return Html::a($model->email, ['update', 'id' => $model->id], ['data-pjax' => 0]);
+                },
+            ],
             [
                 'attribute' => 'created_at',
                 'format' => 'datetime',

@@ -28,9 +28,14 @@ $this->params['breadcrumbs'][] = '<b>'.$label.'</b>';
             'id',
             'username',
             'email:email',
-            'avatar',
+            [
+                'attribute' => 'avatar',
+                'format' => 'raw',
+                'value' => $model->avatar ? Html::img($model->getImageUrl('thumb', 'avatar'), ['alt' => 'avatar', 'title' => $model->avatar]) : null,
+            ],
             'created_at:datetime',
             'updated_at:datetime',
+            'last_login:datetime',
         ],
     ]) ?>
 
