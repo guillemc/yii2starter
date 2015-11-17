@@ -216,7 +216,9 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
     {
         $this->findModel(<?= $actionParams ?>)->delete();
 
-        return $this->redirect(['index']);
+        if (!Yii::$app->request->isAjax) {
+            return $this->redirect(['index']);
+        }
     }
 
     /**

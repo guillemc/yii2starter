@@ -64,8 +64,6 @@ echo newerton\fancybox\FancyBox::widget([
 
     <div class="box-body">
 
-    <?= $form->field($model, 'id')->textInput() ?>
-
     <?= $form->field($model, 'username')->textInput(['maxlength' => 60]) ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => 128]) ?>
@@ -80,9 +78,9 @@ echo newerton\fancybox\FancyBox::widget([
     </div>
     <?php endif ?>
 
-    <?= $form->field($model, 'password')->textInput(['maxlength' => 128]) ?>
+    <?= $form->field($model, 'password')->passwordInput(['maxlength' => 128]) ?>
 
-    <?= $form->field($model, 'passwordRepeat')->textInput(['maxlength' => 128]) ?>
+    <?= $form->field($model, 'passwordRepeat')->passwordInput(['maxlength' => 128]) ?>
 
     <hr>
 

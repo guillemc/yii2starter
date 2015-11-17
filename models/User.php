@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "user".
@@ -165,19 +166,24 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $this->pwd_reset_token = null;
     }
 
+    public static function afterLogin($event)
+    {
+        $model = $event->identity;
+        $model->updateAttributes(['last_login' => time()]);
+    }
+
     public function rules()
     {
         return [
             [['username', 'email', 'password'], 'trim'],
-
-            [['username'], 'string', 'max' => 60],
-            [['password', 'email'], 'string', 'max' => 128],
+            [['username', 'email'], 'required'],
+            [['password'], 'required', 'on' => 'create'],
+            [['password', 'username', 'email'], 'string', 'max' => 128],
             [['password'], 'string', 'min' => 6],
-
-            [['username', 'email','password'], 'required', 'on' => 'create'],
-
-            [['passwordRepeat'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false],
             [['email'], 'email'],
+            [['username', 'email'], 'unique'],
+            [['passwordRepeat'], 'compare', 'compareAttribute' => 'password', 'skipOnEmpty' => false],
+
             [['avatarUpload'], 'image', 'extensions' => ['png', 'jpg', 'gif'], 'maxSize' => 2*1024*1024 ],
             [['avatarRemove'], 'boolean'],
 
@@ -187,11 +193,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function behaviors()
     {
         return [
+            TimestampBehavior::className(),
             [
                 'class' => \app\components\behaviors\ImageUploadBehavior::className(),
                 'config' => [
                     'avatar' => [
-                        'upload' => 'avatarUpload', 
+                        'upload' => 'avatarUpload',
                         'remove' => 'avatarRemove',
                     ],
                 ],
@@ -218,7 +225,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if (parent::beforeSave($insert)) {
 
             if ($this->password && $this->passwordRepeat === $this->password) {
-                $this->setPassword($password);
+                $this->setPassword($this->password);
             }
             return true;
         }

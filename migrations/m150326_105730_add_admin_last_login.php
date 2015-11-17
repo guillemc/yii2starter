@@ -8,12 +8,14 @@ class m150326_105730_add_admin_last_login extends Migration
     public function up()
     {
         $this->addColumn('{{%admin}}', 'last_login', 'int(10) UNSIGNED DEFAULT NULL');
+        $this->addColumn('{{%user}}', 'last_login', 'int(10) UNSIGNED DEFAULT NULL');
 
     }
 
     public function down()
     {
         $this->dropColumn('{{%admin}}', 'last_login');
+        $this->dropColumn('{{%user}}', 'last_login');
     }
 
     /*

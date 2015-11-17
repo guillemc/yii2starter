@@ -42,6 +42,7 @@ $config = [
                 'name' => '_identity-'.APP_ID,
                 'httpOnly' => true,
             ],
+            'on afterLogin' => ['app\models\User', 'afterLogin'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -96,6 +97,20 @@ $config = [
                     'class' => 'yii\i18n\PhpMessageSource',
                     'basePath' => '@app/messages',
                 ],
+            ],
+        ],
+        'assetManager' => [
+            'class' => 'yii\web\AssetManager',
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'js' => [YII_ENV_DEV ? 'jquery.js' : 'jquery.min.js'],
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [YII_ENV_DEV ? 'css/bootstrap.css' : 'css/bootstrap.min.css'],
+                ],
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js' => [YII_ENV_DEV ? 'js/bootstrap.js' : 'js/bootstrap.min.js'],
+                ]
             ],
         ],
     ],

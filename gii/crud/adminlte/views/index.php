@@ -93,7 +93,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
                     },
                     'delete' => function ($url, $model, $key) {
                         return Html::a('<span class="label label-danger"><i class="fa fa-trash"></i></span>', $url, ['data-pjax' => '0', 'title' => Yii::t('admin', 'Delete'),
-                            'data-method' => 'post',
+                            'data-action' => 'delete',
                             'data-confirm' => Yii::t('admin', 'Are you sure you want to delete this item?'),
                         ]);
                     },

@@ -11,7 +11,7 @@ class m150218_171832_create_user_table extends Migration
 
         $this->createTable('{{%user}}', [
             'id' => "int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
-            'username' => "varchar(60) NOT NULL",
+            'username' => "varchar(128) NOT NULL",
             'auth_key' => 'varchar(32) NOT NULL',
             'pwd' => 'varchar(128) DEFAULT NULL',
             'pwd_reset_token' => 'varchar(128) DEFAULT NULL',
@@ -20,10 +20,10 @@ class m150218_171832_create_user_table extends Migration
             'created_at' => "int(10) UNSIGNED NOT NULL",
             'updated_at' => "int(10) UNSIGNED NOT NULL",
         ], $tableOptions);
-        
+
         $this->createIndex('username', '{{%user}}', 'username', true);
         $this->createIndex('email', '{{%user}}', 'email', true);
-        
+
         $this->insert('{{%user}}', [
             'username' => 'demo',
             'pwd' => Yii::$app->security->generatePasswordHash('demo'),
@@ -31,7 +31,7 @@ class m150218_171832_create_user_table extends Migration
             'email' => 'user@example.org',
             'created_at' => time(),
             'updated_at' => time(),
-        ]);        
+        ]);
 
     }
 

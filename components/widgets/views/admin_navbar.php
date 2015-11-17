@@ -11,7 +11,7 @@
   <div class="navbar-custom-menu">
     <ul class="nav navbar-nav">
 
-      <?php if ($this->context->languages): ?>
+      <?php if ($this->context->otherLanguages): ?>
       <li class="dropdown language-switcher">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-flag"></i>&nbsp;<?= current($this->context->currentLanguage) ?>

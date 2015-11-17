@@ -7,6 +7,12 @@ use yii\widgets\Breadcrumbs;
 /* @var $content string */
 
 app\assets\AdminLteAsset::register($this);
+
+if (!isset($this->params['bodyClass'])) $this->params['bodyClass'] = [];
+if (filter_input(INPUT_COOKIE, 'admin-sidebar-collapse')) {
+    $this->params['bodyClass'][] = 'sidebar-collapse';
+}
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>

@@ -17,6 +17,21 @@ class AdminMenu extends Widget
         if ($this->route === null && Yii::$app->controller !== null) {
             $this->route = Yii::$app->controller->getRoute();
         }
+
+        foreach ($this->items as $i => $item) {
+            if (isset($item['visible']) && !$item['visible']) {
+                unset($this->items[$i]);
+                continue;
+            }
+            if (isset($item['items'])) {
+                foreach ($item['items'] as $j => $subitem) {
+                    if (isset($subitem['visible']) && !$subitem['visible']) {
+                        unset($this->items[$i]['items'][$j]);
+                        continue;
+                    }
+                }
+            }
+        }
     }
 
     public function run()
