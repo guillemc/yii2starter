@@ -133,10 +133,10 @@ class ImageUploadBehavior extends FileUploadBehavior
             Yii::warning('Not an image: '.$fileInfo['path'], __METHOD__);
             return;
         }
-        $this->createSizes($fileAttribute, $fileInfo['path']);
+        $this->createImageSizes($fileAttribute, $fileInfo['path']);
     }
 
-    public function createSizes($fileAttribute, $fromPath = null)
+    public function createImageSizes($fileAttribute, $fromPath = null)
     {
         if (!isset($this->resizeConfig[$fileAttribute])) return;
 
@@ -178,7 +178,7 @@ class ImageUploadBehavior extends FileUploadBehavior
 
     }
 
-    public function deleteSizes($fileAttribute)
+    public function removeImageSizes($fileAttribute)
     {
         if (!isset($this->resizeConfig[$fileAttribute])) return;
 
@@ -193,7 +193,7 @@ class ImageUploadBehavior extends FileUploadBehavior
     public function afterFileDelete($event)
     {
         $fileAttribute = $event->attribute;
-        $this->deleteSizes($fileAttribute);
+        $this->removeImageSizes($fileAttribute);
         parent::afterFileDelete($event);
     }
 
