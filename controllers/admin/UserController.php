@@ -3,6 +3,7 @@
 namespace app\controllers\admin;
 
 use Yii;
+use yii\helpers\Url;
 use app\models\User;
 use app\models\admin\UserSearch;
 use app\controllers\admin\BaseController;
@@ -39,6 +40,8 @@ class UserController extends BaseController
         $pageSize = Yii::$app->session->get('admin.page.size', Yii::$app->params['admin.page.size']);
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, ['pageSize' => $pageSize]);
 
+        Url::remember();
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -72,7 +75,8 @@ class UserController extends BaseController
             if (Yii::$app->request->post('continue')) {
                 return $this->redirect(['update', 'id' => $model->id]);
             }
-            return $this->redirect(['index']);
+            $url = Url::previous();
+            return $this->redirect($url ?: ['index']);
         }
 
         return $this->render('edit', compact('model'));
@@ -93,7 +97,8 @@ class UserController extends BaseController
             if (Yii::$app->request->post('continue')) {
                 return $this->refresh();
             }
-            return $this->redirect(['index']);
+            $url = Url::previous();
+            return $this->redirect($url ?: ['index']);
         }
 
         return $this->render('edit', compact('model'));
@@ -110,7 +115,8 @@ class UserController extends BaseController
         $this->findModel($id)->delete();
 
         if (!Yii::$app->request->isAjax) {
-            return $this->redirect(['index']);
+            $url = Url::previous();
+            return $this->redirect($url ?: ['index']);
         }
     }
 

@@ -58,7 +58,7 @@ $this->beginBlock('buttons');
                 'contentOptions' => ['class' => 'text-center'],
             ],
             [
-                'attribute' => 'updated_at',
+                'attribute' => 'last_login',
                 'format' => 'datetime',
                 'headerOptions' => ['class' => 'sort-numerical'],
                 'filter' => false,

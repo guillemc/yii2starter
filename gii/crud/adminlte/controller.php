@@ -30,6 +30,7 @@ echo "<?php\n";
 namespace <?= StringHelper::dirname(ltrim($generator->controllerClass, '\\')) ?>;
 
 use Yii;
+use yii\helpers\Url;
 use <?= ltrim($generator->modelClass, '\\') ?>;
 <?php if (!empty($generator->searchModelClass)): ?>
 use <?= ltrim($generator->searchModelClass, '\\') . (isset($searchModelAlias) ? " as $searchModelAlias" : "") ?>;
@@ -81,6 +82,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
             'query' => <?= $modelClass ?>::find(),
         ]);
 
+        Url::remember();
+
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
@@ -124,7 +127,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                     return $this->redirect(['update', 'id' => $model->id]);
                 }<?php endif ?>
 
-                return $this->redirect(['index']);
+                $url = Url::previous();
+                return $this->redirect($url ?: ['index']);
             }
             $hasError = true;
         }
@@ -144,7 +148,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 return $this->redirect(['update', 'id' => $model->id]);
             }<?php endif ?>
 
-            return $this->redirect(['index']);
+            $url = Url::previous();
+            return $this->redirect($url ?: ['index']);
         }
 
         return $this->render('edit', compact('model'));
@@ -177,7 +182,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                     return $this->refresh();
                 }<?php endif ?>
 
-                return $this->redirect(['index']);
+                $url = Url::previous();
+                return $this->redirect($url ?: ['index']);
             }
             $hasError = true;
         }
@@ -199,7 +205,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
                 return $this->refresh();
             }<?php endif ?>
 
-            return $this->redirect(['index']);
+            $url = Url::previous();
+            return $this->redirect($url ?: ['index']);
         }
 
         return $this->render('edit', compact('model'));
@@ -217,7 +224,8 @@ class <?= $controllerClass ?> extends <?= StringHelper::basename($generator->bas
         $this->findModel(<?= $actionParams ?>)->delete();
 
         if (!Yii::$app->request->isAjax) {
-            return $this->redirect(['index']);
+            $url = Url::previous();
+            return $this->redirect($url ?: ['index']);
         }
     }
 
