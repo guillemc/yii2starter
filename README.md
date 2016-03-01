@@ -53,7 +53,7 @@ at [getcomposer.org](http://getcomposer.org/doc/00-intro.md#installation-nix).
 You can then install this application template using the following command:
 
 ~~~
-composer global require "fxp/composer-asset-plugin:~1.1.0"
+composer global require "fxp/composer-asset-plugin:~1.1.1"
 composer create-project --prefer-dist --stability=dev guillemc/yii2starter myapp
 ~~~
 

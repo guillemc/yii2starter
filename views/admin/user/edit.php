@@ -21,9 +21,7 @@ if ($model->isNewRecord) {
     $this->params['breadcrumbs'][] = ['label' => '<b>'.$label.'</b>', 'url' => ['view', 'id' => $model->id]];
 }
 
-echo newerton\fancybox\FancyBox::widget([
-    'target' => 'a[rel=fancybox]',
-]);
+echo app\components\widgets\FancyBox::widget();
 ?>
 
 <?php if ($model->hasErrors()): ?>
