@@ -45,8 +45,11 @@ a.desc:after {
     content: "\e156";
 }
 
-.grid-view th,
-.grid-view .buttons {
+.grid-view {
+    overflow: auto;
+}
+
+.grid-view th {
     white-space: nowrap;
 }
 
