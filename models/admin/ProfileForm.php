@@ -30,7 +30,7 @@ class ProfileForm extends Model
     public function rules()
     {
         return [
-            [['username', 'email'], 'trim'],
+            [['username', 'email', 'password'], 'trim'],
             ['username', 'required'],
 
             ['password', 'required', 'on' => 'create'],
@@ -69,7 +69,9 @@ class ProfileForm extends Model
     {
         $this->_user->username = $this->username;
         $this->_user->email = $this->email;
-        $this->_user->password = $this->password;
+        if ($this->password) {
+            $this->_user->setPassword($this->password);
+        }
 
         return $this->_user->save();
     }
