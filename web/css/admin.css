@@ -49,7 +49,7 @@ a.desc:after {
     overflow: auto;
 }
 
-.grid-view th {
+.grid-view th, .grid-view td.buttons {
     white-space: nowrap;
 }
 
